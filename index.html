@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#8f70ad">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<title>安安打地鼠｜正式版</title>
+<style>
+:root{
+  --ink:#403742;--muted:#80727d;--paper:#fffaf5;--purple:#8e70ab;--purple2:#b599c9;
+  --pink:#efacb8;--mint:#a8d7c2;--gold:#f2cb5e;--red:#db6b72;--grass:#86b96f;
+  --shadow:0 14px 34px rgba(62,45,55,.17)
+}
+*{
+  box-sizing:border-box;
+  -webkit-user-select:none;user-select:none;
+  -webkit-touch-callout:none;
+  -webkit-tap-highlight-color:transparent
+}
+html,body{
+  margin:0;min-height:100%;overscroll-behavior:none;
+  font-family:ui-rounded,"SF Pro Rounded","PingFang TC","Noto Sans TC",system-ui,sans-serif;
+  color:var(--ink);background:#f2eae2;touch-action:manipulation
+}
+body{display:flex;justify-content:center;overflow-x:hidden}
+button{font:inherit;color:inherit;touch-action:manipulation}
+.app{
+  width:min(100%,800px);min-height:100vh;position:relative;overflow:hidden;
+  padding:max(10px,env(safe-area-inset-top)) 10px max(24px,env(safe-area-inset-bottom));
+  background:
+    radial-gradient(circle at 15% 6%,rgba(255,255,255,.8),transparent 23%),
+    linear-gradient(#cde8ee 0 26%,#f3e9df 26% 100%)
+}
+.skyline{position:absolute;top:105px;left:0;right:0;height:150px;opacity:.19;pointer-events:none}
+.skyline:before{content:"";position:absolute;inset:35px 0 0;background:#4c6870;clip-path:polygon(0 80%,4% 80%,4% 49%,11% 49%,11% 72%,16% 72%,16% 30%,24% 30%,24% 75%,30% 75%,30% 45%,37% 45%,37% 70%,44% 70%,44% 18%,49% 18%,49% 73%,56% 73%,56% 39%,64% 39%,64% 76%,72% 76%,72% 51%,79% 51%,79% 74%,86% 74%,86% 33%,94% 33%,94% 77%,100% 77%,100% 100%,0 100%)}
+.taipei{position:absolute;right:12%;bottom:0;width:28px;height:125px;background:#48646b;clip-path:polygon(44% 0,56% 0,58% 13%,69% 13%,66% 26%,76% 26%,72% 39%,83% 39%,78% 52%,88% 52%,82% 65%,94% 65%,89% 100%,11% 100%,6% 65%,18% 65%,12% 52%,22% 52%,17% 39%,28% 39%,24% 26%,34% 26%,31% 13%,42% 13%)}
+
+.card{background:rgba(255,250,245,.95);border:1px solid rgba(255,255,255,.84);border-radius:22px;box-shadow:var(--shadow)}
+.top{position:relative;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.logo{padding:10px 14px}.logo b{display:block;font-size:20px}.logo small{font-size:10px;color:#8b7d87;font-weight:900;letter-spacing:.06em}
+.iconBtn{border:0;background:var(--paper);border-radius:16px;width:46px;height:46px;box-shadow:var(--shadow);font-size:20px}
+
+.profile{position:relative;z-index:3;display:grid;grid-template-columns:1fr 104px;gap:8px;margin:9px 0}
+.profile .copy{padding:11px 13px}.profile h1{font-size:18px;margin:0 0 4px}.profile p{font-size:11px;line-height:1.45;margin:0;color:var(--muted);font-weight:800}
+.avatarCard{display:grid;place-items:center;padding:2px;overflow:hidden}
+.avatarSvg{width:92px;height:92px}
+
+.hud{position:relative;z-index:3;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:7px}
+.hud .card{text-align:center;padding:7px 4px}
+.hud small{display:block;font-size:9px;color:#8e818a;font-weight:900}
+.hud strong{font-size:15px}
+
+.levelbar{position:relative;z-index:3;padding:9px 12px;margin-bottom:7px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.levelbar b{display:block}.levelbar small{display:block;color:var(--muted);font-weight:850;font-size:10px;margin-top:2px}
+.target{color:var(--purple);font-weight:1000}
+
+.arena{position:relative;z-index:3;background:linear-gradient(#b5d79b 0 23%,#84b96e 23% 100%);padding:10px;border-radius:28px;overflow:hidden;box-shadow:var(--shadow)}
+.arena:after{content:"";position:absolute;inset:23% 0 0;background:repeating-linear-gradient(0deg,transparent 0 11px,rgba(59,99,49,.055) 11px 14px);pointer-events:none}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;position:relative;z-index:2}
+.slot{aspect-ratio:1.08;background:rgba(255,250,245,.59);border-radius:16px;overflow:hidden;position:relative}
+.hole{position:absolute;left:11%;right:11%;bottom:7%;height:27%;border-radius:50%;background:#5b4037;box-shadow:inset 0 8px 0 rgba(0,0,0,.18)}
+.mole{position:absolute;left:9%;right:9%;bottom:4%;height:84%;transform:translateY(119%);transition:transform .13s cubic-bezier(.2,.9,.3,1);cursor:pointer;touch-action:manipulation}
+.mole.show{transform:translateY(0)}
+.moleSvg{width:100%;height:100%;filter:drop-shadow(0 4px 0 rgba(73,54,54,.09))}
+.hp{position:absolute;z-index:4;left:20%;right:20%;top:2%;height:6px;background:rgba(255,255,255,.78);border-radius:99px;overflow:hidden}
+.hp i{display:block;height:100%;background:var(--red);width:100%}
+.mouseName{position:absolute;left:7%;right:7%;bottom:0;background:rgba(255,255,255,.93);border-radius:999px;padding:3px;text-align:center;font-size:9px;font-weight:1000;white-space:nowrap}
+.hit{animation:hit .18s}.stunned .moleSvg{filter:drop-shadow(0 0 11px white) saturate(.72) brightness(1.1)}
+@keyframes hit{0%{transform:translateY(0)}45%{transform:translateY(8%) rotate(-9deg)}100%{transform:translateY(0)}}
+
+.weaponBar{position:relative;z-index:4;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:8px}
+.weapon{position:relative;border:0;border-radius:18px;background:var(--paper);box-shadow:var(--shadow);padding:7px 2px;min-height:82px;font-size:10px;font-weight:1000}
+.weapon.active{outline:3px solid var(--purple);background:#f3ebf8}
+.weapon.locked{filter:grayscale(1) opacity(.66)}
+.weapon .ico{display:block;height:35px;margin:auto}
+.weapon .emoji{display:block;font-size:25px;line-height:35px}
+.weapon small{display:block;color:#887b84;font-size:9px;line-height:1.08;margin-top:2px;font-weight:850}
+.lock{position:absolute;right:4px;top:4px;border-radius:999px;background:#5a5061;color:#fff;font-size:8px;padding:2px 5px}
+
+.skill{position:relative;z-index:4;width:100%;margin-top:8px;border:0;border-radius:19px;background:#5b5163;color:#fff;padding:11px;font-size:15px;font-weight:1000;box-shadow:var(--shadow)}
+.skill:disabled{opacity:.43}.skill.ready{background:linear-gradient(90deg,#71568b,#ae6889);animation:ready .7s infinite alternate}
+@keyframes ready{to{transform:scale(1.012);box-shadow:0 0 24px rgba(150,91,145,.55)}}
+.charge{height:9px;border-radius:99px;background:#e5d8ce;overflow:hidden;margin-top:6px;position:relative;z-index:4}
+.charge i{display:block;width:0;height:100%;background:linear-gradient(90deg,#eda3b0,#8e70ab);transition:.2s}
+.weaponInfo{position:relative;z-index:4;text-align:center;font-size:10px;color:#756a73;font-weight:850;margin-top:7px}
+
+.fx{position:absolute;inset:0;z-index:12;border-radius:28px;overflow:hidden;pointer-events:none}
+.skillBanner{position:absolute;z-index:25;left:50%;top:46%;transform:translate(-50%,-50%) scale(.6);opacity:0;white-space:nowrap;background:#493b4c;color:white;border-radius:999px;padding:15px 22px;font-size:26px;font-weight:1000;box-shadow:0 18px 40px rgba(0,0,0,.26)}
+.skillBanner.show{animation:banner 1.25s ease}
+@keyframes banner{0%{opacity:0;transform:translate(-50%,-50%) scale(.55)}22%,76%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-62%) scale(.92)}}
+.milkWave{position:absolute;left:-15%;right:-15%;height:120px;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(244,253,255,.96) 44%,#bcebf3 48%,rgba(255,255,255,.96) 68%,transparent 72%);animation:milkwave 1s ease forwards}
+@keyframes milkwave{from{bottom:-130px;transform:scaleX(.75);opacity:0}25%{opacity:1}to{bottom:105%;transform:scaleX(1.25);opacity:0}}
+.milkDrop{position:absolute;font-size:29px;animation:drop .8s linear forwards}@keyframes drop{from{transform:translateY(-60px) rotate(0);opacity:1}to{transform:translateY(560px) rotate(220deg);opacity:0}}
+.ink{position:absolute;width:145px;height:145px;border-radius:50%;background:radial-gradient(circle,#2d263e 0 24%,rgba(46,37,63,.78) 25% 46%,transparent 70%);animation:ink 1s forwards}
+@keyframes ink{0%{transform:scale(.15);opacity:0}30%{transform:scale(1.6);opacity:.95}100%{transform:scale(2.2);opacity:0}}
+.sweep{position:absolute;inset:0;background:linear-gradient(120deg,transparent 15%,rgba(255,223,95,.84) 34%,rgba(255,255,255,.98) 49%,rgba(255,223,95,.84) 63%,transparent 82%);transform:translateX(-120%);animation:sweep .9s ease forwards}
+@keyframes sweep{to{transform:translateX(120%)}}
+.flash{position:absolute;inset:0;background:radial-gradient(circle,white,rgba(255,255,255,.28) 48%,transparent 72%);animation:flash .55s forwards}
+@keyframes flash{from{opacity:0;transform:scale(.5)}25%{opacity:1}to{opacity:0;transform:scale(1.5)}}
+.shake{animation:shake .4s linear}@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-5px)}80%{transform:translateX(4px)}}
+
+.hammer{position:fixed;z-index:60;width:98px;height:98px;opacity:0;pointer-events:none;transform-origin:75% 80%}
+.hammer.smash{animation:smash .27s ease}
+@keyframes smash{0%{opacity:1;transform:translate(-15%,-50%) rotate(-52deg) scale(.75)}45%{opacity:1;transform:translate(-15%,-50%) rotate(18deg) scale(1.08)}100%{opacity:0;transform:translate(-15%,-50%) rotate(12deg) scale(.94)}}
+.float{position:fixed;z-index:70;color:#fff;font-weight:1000;font-size:21px;text-shadow:0 3px 0 rgba(70,40,50,.4);pointer-events:none;animation:float .75s forwards}
+@keyframes float{0%{opacity:0;transform:translate(-50%,10px) scale(.65)}20%{opacity:1;transform:translate(-50%,0) scale(1.08)}100%{opacity:0;transform:translate(-50%,-50px) scale(.92)}}
+
+.overlay{position:fixed;z-index:90;inset:0;background:rgba(52,44,53,.45);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;padding:18px}
+.overlay.hidden{display:none}.modal{width:min(100%,455px);padding:21px;text-align:center}
+.big{font-size:66px}.modal h2{font-size:27px;margin:5px 0}.modal p{font-size:12px;color:#776b75;font-weight:800;line-height:1.55}
+.actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:13px}.btn{border:0;border-radius:16px;padding:11px 17px;font-weight:1000}.primary{background:#62566c;color:white}.secondary{background:#eee4dc}
+
+.stageGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px}
+.stage{border:0;border-radius:15px;background:#f0e6df;padding:10px 3px;font-weight:1000;position:relative}
+.stage.locked{opacity:.4}.stage .stars{font-size:10px;color:#d3a82c;display:block;margin-top:2px;min-height:13px}
+.stage.current{outline:3px solid var(--purple)}
+.menuAvatar{width:122px;height:122px;margin:-5px auto 4px}
+.menuTop{display:flex;justify-content:center;gap:7px;margin-top:9px;flex-wrap:wrap}
+.badge{padding:5px 9px;border-radius:999px;background:#f1e8f6;color:#76568d;font-size:10px;font-weight:950}
+
+
+.goldBurst{position:absolute;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle,#fff5b8 0 25%,#ffd95f 26% 60%,rgba(255,223,95,.2) 61% 100%);animation:goldburst .7s ease forwards}
+@keyframes goldburst{from{transform:translate(0,0) scale(.35);opacity:1}to{transform:translate(var(--tx),var(--ty)) scale(1.2);opacity:0}}
+.goldRing{position:absolute;left:50%;top:50%;width:32px;height:32px;border:5px solid rgba(255,220,92,.88);border-radius:50%;transform:translate(-50%,-50%);animation:ring .55s ease forwards}
+@keyframes ring{from{opacity:1;transform:translate(-50%,-50%) scale(.4)}to{opacity:0;transform:translate(-50%,-50%) scale(2.2)}}
+
+@media(max-width:520px){
+  .app{padding:8px}.profile{grid-template-columns:1fr 92px}.avatarSvg{width:82px;height:82px}
+  .grid{gap:6px}.slot{border-radius:14px}.arena{padding:9px}.hud strong{font-size:14px}
+  .skillBanner{font-size:21px;padding:13px 18px}.stageGrid{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="skyline"><div class="taipei"></div></div>
+
+  <div class="top">
+    <div class="logo card"><b>🔨 安安打地鼠</b><small>AN-AN WHACK-A-MOLE · OFFICIAL</small></div>
+    <button class="iconBtn" id="soundBtn">🔊</button>
+  </div>
+
+  <section class="profile">
+    <div class="card copy">
+      <h1 id="headline">今天也要把鼠鼠敲回去。</h1>
+      <p id="subline">正式版加入關卡選擇、三星評價、永久武器解鎖、黃金萬屁鼠獎勵音效、BOSS 與安鼠之亂。</p>
+    </div>
+    <div class="card avatarCard">
+      <svg class="avatarSvg" viewBox="0 0 120 120" aria-label="安安角色">
+        <circle cx="60" cy="63" r="42" fill="#f1cfb0"/>
+        <path d="M22 53 Q25 30 44 22 Q55 10 71 16 Q88 18 99 36 Q101 49 97 58 Q90 45 82 42 Q72 31 59 33 Q47 31 36 40 Q28 43 22 53" fill="#222228"/>
+        <path d="M33 41 Q46 18 66 24 Q83 20 95 34" fill="none" stroke="#17171c" stroke-width="6" stroke-linecap="round"/>
+        <path d="M39 57 Q47 53 56 55" fill="none" stroke="#322b2e" stroke-width="4.8" stroke-linecap="round"/>
+        <path d="M65 55 Q74 52 82 57" fill="none" stroke="#322b2e" stroke-width="4.8" stroke-linecap="round"/>
+        <ellipse cx="48" cy="65" rx="4.2" ry="4.8" fill="#29252a"/>
+        <ellipse cx="73" cy="65" rx="4.2" ry="4.8" fill="#29252a"/>
+        <path d="M59 68 q-3 8 1 10" fill="none" stroke="#c18a74" stroke-width="3" stroke-linecap="round"/>
+        <path d="M51 84 Q60 90 70 84" fill="none" stroke="#865a5f" stroke-width="3" stroke-linecap="round"/>
+        <path d="M36 100 Q46 92 60 92 Q74 92 84 100 L79 109 Q69 104 60 104 Q51 104 41 109 Z" fill="#8db8d4"/>
+      </svg>
+    </div>
+  </section>
+
+  <div class="hud">
+    <div class="card"><small>LEVEL</small><strong id="levelNum">1</strong></div>
+    <div class="card"><small>SCORE</small><strong id="score">0</strong></div>
+    <div class="card"><small>COMBO</small><strong id="combo">0</strong></div>
+    <div class="card"><small>TIME</small><strong id="time">30</strong></div>
+  </div>
+
+  <div class="levelbar card">
+    <div><b id="levelName">初次見鼠</b><small id="unlockLine">已解鎖：安安木槌</small></div>
+    <div class="target" id="targetText">目標 900</div>
+  </div>
+
+  <section class="arena" id="arena">
+    <div class="grid" id="grid"></div>
+    <div class="fx" id="fx"></div>
+    <div class="skillBanner" id="skillBanner">🥛 生生喝鮮乳！</div>
+  </section>
+
+  <div class="weaponBar">
+    <button class="weapon active" data-w="basic">
+      <span class="emoji">🔨</span>安安木槌<small>單體・充能最快</small>
+    </button>
+    <button class="weapon locked" data-w="milk">
+      <svg class="ico" viewBox="0 0 70 35"><rect x="6" y="5" width="46" height="25" rx="8" fill="#fff" stroke="#69c3d4" stroke-width="3"/><path d="M9 14H50" stroke="#d9f6fb" stroke-width="7"/><text x="28" y="23" text-anchor="middle" font-size="9" font-weight="900" fill="#4faabd">鮮乳</text><rect x="50" y="14" width="18" height="7" rx="3.5" fill="#8d674b"/></svg>
+      鮮乳鎚<small>十字濺射</small><span class="lock">LV2</span>
+    </button>
+    <button class="weapon locked" data-w="squid">
+      <span class="emoji">🦑</span>小卷鎚<small>自動追擊</small><span class="lock">LV4</span>
+    </button>
+    <button class="weapon locked" data-w="umbrella">
+      <span class="emoji">☂️</span>百萬遮陽傘<small>整排掃擊</small><span class="lock">LV6</span>
+    </button>
+  </div>
+
+  <button class="skill" id="skillBtn" disabled>必殺技充能中 0%</button>
+  <div class="charge"><i id="chargeBar"></i></div>
+  <div class="weaponInfo" id="weaponInfo">安安木槌：單體攻擊，充能最快。</div>
+</div>
+
+<div class="hammer" id="hammer"></div>
+
+<div class="overlay" id="menuOverlay">
+  <div class="card modal">
+    <svg class="menuAvatar" viewBox="0 0 120 120">
+      <circle cx="60" cy="63" r="42" fill="#f1cfb0"/>
+      <path d="M22 53 Q25 30 44 22 Q55 10 71 16 Q88 18 99 36 Q101 49 97 58 Q90 45 82 42 Q72 31 59 33 Q47 31 36 40 Q28 43 22 53" fill="#222228"/>
+      <path d="M33 41 Q46 18 66 24 Q83 20 95 34" fill="none" stroke="#17171c" stroke-width="6" stroke-linecap="round"/>
+      <path d="M39 57 Q47 53 56 55 M65 55 Q74 52 82 57" fill="none" stroke="#322b2e" stroke-width="4.8" stroke-linecap="round"/>
+      <ellipse cx="48" cy="65" rx="4.2" ry="4.8" fill="#29252a"/><ellipse cx="73" cy="65" rx="4.2" ry="4.8" fill="#29252a"/>
+      <path d="M51 84 Q60 90 70 84" fill="none" stroke="#865a5f" stroke-width="3" stroke-linecap="round"/>
+      <path d="M36 100 Q46 92 60 92 Q74 92 84 100 L79 109 Q69 104 60 104 Q51 104 41 109 Z" fill="#8db8d4"/>
+    </svg>
+    <h2>安安打地鼠</h2>
+    <p>選擇關卡。過關會永久解鎖後續關卡與武器，並依成績取得 1～3 顆星。</p>
+    <div class="menuTop">
+      <span class="badge" id="starBadge">⭐ 0</span>
+      <span class="badge" id="weaponBadge">🔨 1 / 4</span>
+      <span class="badge">🏙️ Taipei</span>
+    </div>
+    <div class="stageGrid" id="stageGrid"></div>
+    <div class="actions"><button class="btn primary" id="playSelected">開始這一關</button></div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="resultOverlay">
+  <div class="card modal">
+    <div class="big" id="resultIcon">🎉</div>
+    <h2 id="resultTitle">CLEAR!</h2>
+    <p id="resultText"></p>
+    <div class="actions">
+      <button class="btn secondary" id="retryBtn">重打</button>
+      <button class="btn secondary" id="menuBtn">關卡選擇</button>
+      <button class="btn primary" id="nextBtn">下一關</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Prevent Android Chrome text-selection / Touch-to-Search interactions while playing */
+document.addEventListener("contextmenu",e=>e.preventDefault(),{passive:false});
+document.addEventListener("selectstart",e=>e.preventDefault(),{passive:false});
+document.addEventListener("dragstart",e=>e.preventDefault(),{passive:false});
+
+const LEVELS=[
+{name:"初次見鼠",time:28,target:900,spawn:850,pool:["wan"]},
+{name:"屁鼠成群",time:30,target:1700,spawn:720,pool:["wan","wan","salon"]},
+{name:"沙龍趴夜",time:32,target:2450,spawn:620,pool:["wan","salon","salon","gold"]},
+{name:"膝當來襲",time:34,target:3300,spawn:575,pool:["wan","salon","knee"]},
+{name:"三鼠會戰",time:36,target:4300,spawn:500,pool:["wan","salon","knee","knee","gold"]},
+{name:"百萬防線",time:37,target:5100,spawn:455,pool:["wan","salon","knee","gold"]},
+{name:"亂前警報",time:38,target:5800,spawn:420,pool:["salon","knee","wan","gold"]},
+{name:"安鼠之亂",time:42,target:7200,spawn:345,pool:["wan","salon","knee","wan","salon","gold"],chaos:true},
+{name:"安鼠餘波",time:40,target:7800,spawn:325,pool:["salon","knee","knee","wan","gold"]},
+{name:"地下鼠城",time:42,target:8500,spawn:305,pool:["wan","salon","knee","knee","gold"]},
+{name:"鼠王近衛軍",time:44,target:9600,spawn:285,pool:["salon","knee","knee","gold"]},
+{name:"鼠王壓境",time:48,target:11500,spawn:255,pool:["wan","salon","knee","knee","gold"],boss:true}
+];
+const SVG={
+wan:`<svg class="moleSvg" viewBox="0 0 120 130"><ellipse cx="60" cy="85" rx="38" ry="42" fill="#b98c73" stroke="#654d43" stroke-width="4"/><circle cx="33" cy="47" r="20" fill="#b98c73" stroke="#654d43" stroke-width="4"/><circle cx="87" cy="47" r="20" fill="#b98c73" stroke="#654d43" stroke-width="4"/><circle cx="33" cy="47" r="11" fill="#e8b9b2"/><circle cx="87" cy="47" r="11" fill="#e8b9b2"/><circle cx="46" cy="73" r="5" fill="#382e31"/><circle cx="74" cy="73" r="5" fill="#382e31"/><ellipse cx="60" cy="87" rx="11" ry="8" fill="#dd9ea4"/><path d="M52 97q8 5 16 0" stroke="#7f6060" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M92 94q13-2 18 7" stroke="#cbe38d" stroke-width="6" stroke-linecap="round" opacity=".65"/></svg>`,
+salon:`<svg class="moleSvg" viewBox="0 0 120 130"><ellipse cx="60" cy="86" rx="38" ry="41" fill="#c79a86" stroke="#634b43" stroke-width="4"/><circle cx="32" cy="48" r="20" fill="#c79a86" stroke="#634b43" stroke-width="4"/><circle cx="88" cy="48" r="20" fill="#c79a86" stroke="#634b43" stroke-width="4"/><circle cx="32" cy="48" r="11" fill="#efc0bd"/><circle cx="88" cy="48" r="11" fill="#efc0bd"/><path d="M34 47Q43 22 61 31Q79 17 91 46Q74 35 60 44Q45 33 34 47" fill="#443842"/><rect x="37" y="63" width="22" height="12" rx="6" fill="#14131a"/><rect x="61" y="63" width="22" height="12" rx="6" fill="#14131a"/><rect x="58" y="67" width="4" height="3" fill="#14131a"/><ellipse cx="60" cy="87" rx="11" ry="8" fill="#df9ea7"/><path d="M52 97q8 4 16 0" stroke="#7f6060" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`,
+knee:`<svg class="moleSvg" viewBox="0 0 120 130"><ellipse cx="60" cy="85" rx="40" ry="43" fill="#9d9997" stroke="#504b4c" stroke-width="4"/><circle cx="31" cy="46" r="20" fill="#9d9997" stroke="#504b4c" stroke-width="4"/><circle cx="89" cy="46" r="20" fill="#9d9997" stroke="#504b4c" stroke-width="4"/><circle cx="31" cy="46" r="10" fill="#dfb5b6"/><circle cx="89" cy="46" r="10" fill="#dfb5b6"/><path d="M39 66L53 70M81 66L67 70" stroke="#3b373a" stroke-width="5" stroke-linecap="round"/><circle cx="46" cy="78" r="4" fill="#2d2b31"/><circle cx="74" cy="78" r="4" fill="#2d2b31"/><ellipse cx="60" cy="90" rx="12" ry="8" fill="#d89aa1"/><path d="M52 100q8 6 16 0" stroke="#76595f" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M33 39q12-18 28-11q18-8 28 11" fill="none" stroke="#d7b94d" stroke-width="6" stroke-linecap="round"/><circle cx="60" cy="29" r="7" fill="#f1da74"/></svg>`,
+gold:`<svg class="moleSvg" viewBox="0 0 120 130"><ellipse cx="60" cy="85" rx="38" ry="42" fill="#e9c456" stroke="#80682d" stroke-width="4"/><circle cx="33" cy="47" r="20" fill="#e9c456" stroke="#80682d" stroke-width="4"/><circle cx="87" cy="47" r="20" fill="#e9c456" stroke="#80682d" stroke-width="4"/><circle cx="33" cy="47" r="11" fill="#f5d4a0"/><circle cx="87" cy="47" r="11" fill="#f5d4a0"/><circle cx="46" cy="73" r="5" fill="#45360f"/><circle cx="74" cy="73" r="5" fill="#45360f"/><ellipse cx="60" cy="87" rx="11" ry="8" fill="#dc9392"/><path d="M49 97q11 8 22 0" stroke="#7d5f34" stroke-width="3" fill="none"/><path d="M60 23l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" fill="#fff2a2"/></svg>`
+};
+const MOLES={
+wan:{name:"萬屁鼠",score:100,hp:1,stay:930,svg:SVG.wan},
+salon:{name:"沙龍趴鼠",score:175,hp:1,stay:745,svg:SVG.salon},
+knee:{name:"膝當普利鼠",score:285,hp:2,stay:1240,svg:SVG.knee},
+gold:{name:"黃金萬屁鼠",score:520,hp:1,stay:560,svg:SVG.gold}
+};
+const WEAPONS={
+basic:{name:"安安木槌",unlock:1,skill:"🔨 安安暴走！",info:"單體攻擊；充能最快。必殺會瞬間清場並進入 3 秒快速充能。"},
+milk:{name:"鮮乳鎚",unlock:2,skill:"🥛 生生喝鮮乳！",info:"命中濺射上下左右。必殺：奶浪全場傷害 2 點＋6 秒暈眩、雙倍分數、持續奶滴傷害。"},
+squid:{name:"小卷鎚",unlock:4,skill:"🦑 營養午餐大爆發！",info:"每次命中自動追打一隻其他鼠。必殺：墨汁覆蓋＋全場重擊清場。"},
+umbrella:{name:"百萬遮陽傘",unlock:6,skill:"☂️ 百萬遮陽傘！",info:"平常整排掃擊。必殺：三波大掃擊依序掃過全場。"}
+};
+
+const grid=document.getElementById("grid");
+const fx=document.getElementById("fx");
+const arena=document.getElementById("arena");
+const active=Array(9).fill(null);
+for(let i=0;i<9;i++){
+  const s=document.createElement("div");s.className="slot";
+  s.innerHTML=`<div class="hole"></div><div class="mole" data-i="${i}"><div class="hp"><i></i></div><div class="host"></div><div class="mouseName"></div></div>`;
+  grid.appendChild(s);
+}
+const moleEls=[...document.querySelectorAll(".mole")];
+moleEls.forEach(el=>el.addEventListener("pointerdown",e=>attack(Number(el.dataset.i),e)));
+
+let selectedLevel=0, level=0, score=0, combo=0, charge=0, timeLeft=30, running=false, soundOn=true, weapon="basic";
+let spawnTimer=null,countTimer=null,skillMode=null,skillUntil=0,milkDotTimer=null,rapidUntil=0;
+
+let save=JSON.parse(localStorage.getItem("anan_official_save")||'{"unlocked":1,"stars":{},"high":{},"weaponMax":1}');
+function writeSave(){localStorage.setItem("anan_official_save",JSON.stringify(save))}
+function totalStars(){return Object.values(save.stars||{}).reduce((a,b)=>a+b,0)}
+function isWeaponUnlocked(k){return save.unlocked>=WEAPONS[k].unlock}
+function availableWeaponNames(){return Object.keys(WEAPONS).filter(isWeaponUnlocked).map(k=>WEAPONS[k].name)}
+
+function buildStages(){
+  stageGrid.innerHTML="";
+  LEVELS.forEach((L,i)=>{
+    const b=document.createElement("button");b.className="stage"+(i>=save.unlocked?" locked":"")+(i===selectedLevel?" current":"");
+    b.innerHTML=`${i+1}<span class="stars">${"★".repeat(save.stars[i]||0)}${"☆".repeat(3-(save.stars[i]||0))}</span>`;
+    b.onclick=()=>{if(i<save.unlocked){selectedLevel=i;buildStages()}};
+    stageGrid.appendChild(b);
+  });
+  starBadge.textContent="⭐ "+totalStars();
+  weaponBadge.textContent="🔨 "+Object.keys(WEAPONS).filter(isWeaponUnlocked).length+" / 4";
+}
+function showMenu(){
+  running=false;clearTimeout(spawnTimer);clearInterval(countTimer);clearInterval(milkDotTimer);stopMusic();
+  resultOverlay.classList.add("hidden");menuOverlay.classList.remove("hidden");buildStages();
+}
+function setupLevel(){
+  level=selectedLevel;
+  const L=LEVELS[level];
+  score=0;combo=0;charge=0;timeLeft=L.time;skillMode=null;
+  levelNum.textContent=level+1;levelName.textContent=L.name;targetText.textContent="目標 "+L.target;time.textContent=timeLeft;
+  unlockLine.textContent="已解鎖："+availableWeaponNames().join("、");
+  if(!isWeaponUnlocked(weapon))weapon="basic";
+  refreshWeapons();updateHUD();
+  headline.textContent=L.chaos?"⚠️ 安鼠之亂爆發！":L.boss?"👑 鼠王壓境":"今天也要把鼠鼠敲回去。";
+  subline.textContent=L.chaos?"鼠群全面暴走，BGM 加速，出現速度大幅提升。":L.boss?"最終關卡：撐住鼠王近衛軍的高速攻勢。":"敲中鼠鼠累積必殺技；武器會依闖關進度逐步解鎖。";
+  if(L.chaos||L.boss){skillBanner.textContent=L.chaos?"⚠️ 安鼠之亂 ⚠️":"👑 鼠王壓境 👑";showBanner()}
+}
+function startLevel(){
+  menuOverlay.classList.add("hidden");resultOverlay.classList.add("hidden");
+  setupLevel();running=true;startMusic();schedule();
+  countTimer=setInterval(()=>{
+    timeLeft--;time.textContent=timeLeft;
+    if(Date.now()>skillUntil && skillMode==="milk"){skillMode=null;clearInterval(milkDotTimer)}
+    if(timeLeft<=0)finish();
+  },1000);
+}
+function schedule(){
+  if(!running)return;
+  spawnOne();
+  const L=LEVELS[level];
+  spawnTimer=setTimeout(schedule,Math.max(175,L.spawn+(Math.random()*130-55)));
+}
+function spawnOne(){
+  const empty=active.map((x,i)=>x?null:i).filter(x=>x!==null);if(!empty.length)return;
+  const i=empty[Math.floor(Math.random()*empty.length)],L=LEVELS[level];
+  let type=L.pool[Math.floor(Math.random()*L.pool.length)];
+  if(L.boss && Math.random()<.22)type="knee";
+  const m=MOLES[type],token=performance.now()+Math.random();
+  active[i]={type,hp:m.hp,max:m.hp,token};
+  const el=moleEls[i];el.querySelector(".host").innerHTML=m.svg;el.querySelector(".mouseName").textContent=m.name;el.querySelector(".hp i").style.width="100%";
+  el.classList.remove("stunned");el.classList.add("show");
+  if(skillMode==="milk")el.classList.add("stunned");
+  let stay=Math.max(330,m.stay-level*28)+(skillMode==="milk"?520:0);
+  setTimeout(()=>{if(active[i]&&active[i].token===token){hide(i);combo=0;updateHUD()}},stay);
+}
+function neighbors(i){const r=Math.floor(i/3),c=i%3,a=[];if(r>0)a.push(i-3);if(r<2)a.push(i+3);if(c>0)a.push(i-1);if(c<2)a.push(i+1);return a}
+function row(i){const r=Math.floor(i/3);return[r*3,r*3+1,r*3+2]}
+function attack(i,e){
+  if(!running||!active[i])return;
+  showHammer(e.clientX,e.clientY);
+  if(weapon==="basic")damage(i,1,e.clientX,e.clientY,1);
+  if(weapon==="milk"){damage(i,1,e.clientX,e.clientY,1);neighbors(i).forEach(n=>active[n]&&damage(n,1,e.clientX,e.clientY,.55,true))}
+  if(weapon==="squid"){damage(i,1,e.clientX,e.clientY,1);const o=active.map((x,j)=>x&&j!==i?j:null).filter(x=>x!==null);if(o.length){const n=o[Math.floor(Math.random()*o.length)];setTimeout(()=>damage(n,1,e.clientX+25,e.clientY-10,.7,true),80)}}
+  if(weapon==="umbrella")row(i).forEach(n=>active[n]&&damage(n,1,e.clientX,e.clientY,n===i?1:.7,true));
+}
+function damage(i,d,x,y,mult=1,secondary=false){
+  if(!active[i])return;
+  const st=active[i],m=MOLES[st.type],el=moleEls[i];st.hp-=d;
+  el.classList.remove("hit");void el.offsetWidth;el.classList.add("hit");el.querySelector(".hp i").style.width=Math.max(0,st.hp/st.max*100)+"%";
+  bonk(weapon,secondary);
+  if(st.hp<=0){
+    let gain=Math.round(m.score*mult);if(skillMode==="milk")gain*=2;combo++;gain+=Math.min(combo,25)*7;score+=gain;
+    let rate={basic:18,milk:13,squid:12,umbrella:10}[weapon];if(Date.now()<rapidUntil)rate*=1.7;
+    charge=Math.min(100,charge+rate);
+    if(st.type==="gold"){
+      goldBurst(i);
+      goldJingle();
+      floatText("JACKPOT!",x,y-24);
+      floatText("+"+gain,x,y+4);
+    }else{
+      floatText("+"+gain,x,y);
+    }
+    hide(i);
+  }
+  updateHUD();
+}
+function hide(i){active[i]=null;moleEls[i].classList.remove("show","stunned")}
+function refreshWeapons(){
+  document.querySelectorAll(".weapon").forEach(b=>{const k=b.dataset.w,locked=!isWeaponUnlocked(k);b.classList.toggle("locked",locked);b.classList.toggle("active",k===weapon&&!locked);const l=b.querySelector(".lock");if(l)l.style.display=locked?"inline-block":"none"})
+}
+function chooseWeapon(k){if(!isWeaponUnlocked(k))return;weapon=k;refreshWeapons();updateHUD();uiChime()}
+function updateHUD(){scoreEl.textContent=score;comboEl.textContent=combo;chargeBar.style.width=charge+"%";skillBtn.disabled=charge<100;skillBtn.classList.toggle("ready",charge>=100);skillBtn.textContent=charge>=100?WEAPONS[weapon].skill:"必殺技充能中 "+Math.floor(charge)+"%";weaponInfo.textContent=WEAPONS[weapon].info}
+const scoreEl=document.getElementById("score"),comboEl=document.getElementById("combo");
+
+function useSkill(){
+  if(charge<100||!running)return;charge=0;skillJingle();
+  if(weapon==="basic"){
+    skillBanner.textContent="🔨 安安暴走！";showBanner();flashFx();shake();rapidUntil=Date.now()+3000;
+    active.forEach((x,i)=>x&&damage(i,99,innerWidth/2,innerHeight*.45,1,true));
+  }
+  if(weapon==="milk"){
+    skillBanner.textContent="🥛 生生喝鮮乳！";showBanner();shake();milkWave();
+    /* Immediate real damage */
+    active.forEach((x,i)=>x&&damage(i,2,innerWidth/2,innerHeight*.45,1.2,true));
+    skillMode="milk";skillUntil=Date.now()+6500;
+    for(let k=0;k<22;k++)setTimeout(milkDrop,k*80);
+    /* Periodic real damage during the skill */
+    clearInterval(milkDotTimer);
+    milkDotTimer=setInterval(()=>{
+      if(Date.now()>skillUntil){clearInterval(milkDotTimer);return}
+      active.forEach((x,i)=>{if(x){moleEls[i].classList.add("stunned");damage(i,1,innerWidth/2,innerHeight*.44,.65,true)}})
+    },1200);
+    floatText("奶浪傷害＋雙倍分數！",innerWidth/2,innerHeight*.30);
+  }
+  if(weapon==="squid"){
+    skillBanner.textContent="🦑 營養午餐大爆發！";showBanner();shake();
+    for(let k=0;k<9;k++)setTimeout(()=>inkBurst(Math.random()*85+4,Math.random()*65+12),k*80);
+    setTimeout(()=>active.forEach((x,i)=>x&&damage(i,99,innerWidth/2,innerHeight*.45,2,true)),260);
+  }
+  if(weapon==="umbrella"){
+    skillBanner.textContent="☂️ 百萬遮陽傘！";showBanner();shake();
+    const s=document.createElement("div");s.className="sweep";fx.appendChild(s);setTimeout(()=>s.remove(),950);
+    [0,1,2].forEach((r,k)=>setTimeout(()=>[r*3,r*3+1,r*3+2].forEach(i=>active[i]&&damage(i,99,innerWidth/2,innerHeight*.45,1.5,true)),k*180));
+  }
+  updateHUD();
+}
+function showBanner(){skillBanner.classList.remove("show");void skillBanner.offsetWidth;skillBanner.classList.add("show")}
+function shake(){arena.classList.remove("shake");void arena.offsetWidth;arena.classList.add("shake")}
+function flashFx(){const f=document.createElement("div");f.className="flash";fx.appendChild(f);setTimeout(()=>f.remove(),600)}
+function milkWave(){const w=document.createElement("div");w.className="milkWave";fx.appendChild(w);setTimeout(()=>w.remove(),1100)}
+function milkDrop(){const d=document.createElement("div");d.className="milkDrop";d.textContent=Math.random()>.45?"🥛":"💧";d.style.left=Math.random()*94+"%";d.style.top="-25px";fx.appendChild(d);setTimeout(()=>d.remove(),850)}
+function inkBurst(x,y){const d=document.createElement("div");d.className="ink";d.style.left=x+"%";d.style.top=y+"%";fx.appendChild(d);setTimeout(()=>d.remove(),1100)}
+function floatText(t,x,y){const f=document.createElement("div");f.className="float";f.textContent=t;f.style.left=x+"px";f.style.top=y+"px";document.body.appendChild(f);setTimeout(()=>f.remove(),780)}
+function goldBurst(i){
+  const host=moleEls[i].parentElement;
+  const ring=document.createElement("div");ring.className="goldRing";host.appendChild(ring);setTimeout(()=>ring.remove(),580);
+  for(let k=0;k<10;k++){
+    const p=document.createElement("div");p.className="goldBurst";
+    const ang=(Math.PI*2/10)*k, dist=34+Math.random()*18;
+    p.style.left="50%";p.style.top="48%";
+    p.style.setProperty("--tx", Math.cos(ang)*dist+"px");
+    p.style.setProperty("--ty", Math.sin(ang)*dist+"px");
+    host.appendChild(p);setTimeout(()=>p.remove(),760);
+  }
+}
+
+function starsFor(score,target){if(score>=target*1.55)return 3;if(score>=target*1.2)return 2;return 1}
+function finish(){
+  if(!running)return;running=false;clearTimeout(spawnTimer);clearInterval(countTimer);clearInterval(milkDotTimer);stopMusic();active.forEach((x,i)=>hide(i));
+  const L=LEVELS[level],ok=score>=L.target;
+  if(ok){
+    const stars=starsFor(score,L.target);save.stars[level]=Math.max(save.stars[level]||0,stars);save.high[level]=Math.max(save.high[level]||0,score);
+    save.unlocked=Math.max(save.unlocked,Math.min(LEVELS.length,level+2));writeSave();
+    resultIcon.textContent="🎉";resultTitle.textContent="CLEAR!";
+    const newly=Object.entries(WEAPONS).filter(([k,w])=>w.unlock===level+2).map(([k,w])=>w.name);
+    resultText.textContent=`${"⭐".repeat(stars)}　分數 ${score}。`+(newly.length?` 新武器解鎖：${newly.join("、")}！`:"");
+    nextBtn.style.display="inline-block";
+  }else{
+    resultIcon.textContent="🐭";resultTitle.textContent="再差一點";resultText.textContent=`目標 ${L.target}，這次 ${score} 分。`;nextBtn.style.display="none";
+  }
+  resultOverlay.classList.remove("hidden");resultTune(ok);
+}
+function showHammer(x,y){
+  const h=document.getElementById("hammer");h.style.left=x+"px";h.style.top=y+"px";
+  if(weapon==="basic")h.innerHTML=`<svg viewBox="0 0 100 100"><rect x="44" y="34" width="12" height="58" rx="6" fill="#8b6246" transform="rotate(-28 50 63)"/><rect x="17" y="13" width="62" height="35" rx="12" fill="#d3a16f" stroke="#8f6647" stroke-width="5"/></svg>`;
+  if(weapon==="milk")h.innerHTML=`<svg viewBox="0 0 110 110"><rect x="50" y="39" width="12" height="62" rx="6" fill="#8b6246" transform="rotate(-28 56 70)"/><rect x="11" y="13" width="70" height="42" rx="14" fill="#fff" stroke="#68bfd0" stroke-width="5"/><path d="M15 29H77" stroke="#d8f6fb" stroke-width="11"/><text x="46" y="41" text-anchor="middle" font-size="17" font-weight="1000" fill="#43a9bc">鮮乳</text><path d="M18 18q8-7 16 0" fill="none" stroke="#8bdaea" stroke-width="4"/></svg>`;
+  if(weapon==="squid")h.innerHTML=`<div style="font-size:79px;filter:drop-shadow(0 5px 0 rgba(0,0,0,.12))">🦑</div>`;
+  if(weapon==="umbrella")h.innerHTML=`<div style="font-size:81px;filter:drop-shadow(0 5px 0 rgba(0,0,0,.12))">☂️</div>`;
+  h.classList.remove("smash");void h.offsetWidth;h.classList.add("smash");
+}
+
+/* Multi-layer cheerful BGM: melody + counter-melody + bass + kick + hi-hat. Chaos stages accelerate. */
+let AC,audioCtx,bgmTimer=null,bgmStep=0;
+const lead=[72,76,79,81,79,76,74,76,77,81,84,81,79,77,76,74,72,76,79,84,83,81,79,76,74,77,81,86,84,81,79,77];
+const counter=[60,64,67,64,62,65,69,65,60,64,67,71,69,67,65,62];
+const bass=[48,48,50,50,53,53,55,55,48,48,45,45,50,50,43,43];
+function ctx(){if(!audioCtx){AC=window.AudioContext||window.webkitAudioContext;audioCtx=new AC()}return audioCtx}
+function tone(midi,dur=.12,vol=.025,type="square",delay=0){
+  if(!soundOn)return;const a=ctx(),o=a.createOscillator(),g=a.createGain(),t=a.currentTime+delay;
+  o.type=type;o.frequency.value=440*Math.pow(2,(midi-69)/12);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+  o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+dur)
+}
+function kick(delay=0){if(!soundOn)return;const a=ctx(),o=a.createOscillator(),g=a.createGain(),t=a.currentTime+delay;o.type="sine";o.frequency.setValueAtTime(130,t);o.frequency.exponentialRampToValueAtTime(48,t+.09);g.gain.setValueAtTime(.035,t);g.gain.exponentialRampToValueAtTime(.001,t+.10);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+.1)}
+function hat(delay=0){if(!soundOn)return;const a=ctx(),b=a.createBuffer(1,a.sampleRate*.045,a.sampleRate),data=b.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*(1-i/data.length);const s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain(),t=a.currentTime+delay;s.buffer=b;f.type="highpass";f.frequency.value=5000;g.gain.value=.011;s.connect(f);f.connect(g);g.connect(a.destination);s.start(t);s.stop(t+.045)}
+function startMusic(){
+  stopMusic();bgmStep=0;const fast=LEVELS[level].chaos||LEVELS[level].boss,ms=fast?132:158;
+  bgmTimer=setInterval(()=>{
+    if(!running||!soundOn)return;
+    tone(lead[bgmStep%lead.length],.12,.020,bgmStep%4===0?"square":"triangle");
+    tone(counter[bgmStep%counter.length],.10,.009,"sine",.035);
+    tone(bass[Math.floor(bgmStep/2)%bass.length],.14,.012,"triangle");
+    if(bgmStep%2===0)kick();hat(.025);
+    if(bgmStep%8===7){tone(84,.08,.012,"square",.045);tone(88,.08,.009,"square",.09)}
+    bgmStep++;
+  },ms)
+}
+function stopMusic(){clearInterval(bgmTimer);bgmTimer=null}
+function bonk(w,secondary){if(w==="basic"){tone(50,.05,secondary?.015:.035,"square");tone(38,.07,.018,"triangle",.02)}if(w==="milk"){tone(79,.07,.024,"sine");tone(86,.08,.020,"sine",.035)}if(w==="squid"){tone(45,.065,.03,"sawtooth");tone(57,.07,.016,"triangle",.03)}if(w==="umbrella"){tone(64,.05,.025,"square");tone(67,.05,.02,"square",.025);tone(71,.06,.016,"square",.05)}}
+function goldJingle(){[84,88,91,96].forEach((n,i)=>tone(n,.11,.03,"triangle",i*.045));tone(72,.18,.02,"sine",.02)}
+function skillJingle(){[72,76,79,84,88,91].forEach((n,i)=>tone(n,.18,.035,"square",i*.065));kick(.1);kick(.24)}
+function resultTune(ok){(ok?[72,76,79,84,88]:[69,67,64,60]).forEach((n,i)=>tone(n,.16,.03,"triangle",i*.11))}
+function uiChime(){tone(76,.07,.02,"sine");tone(83,.08,.016,"sine",.045)}
+
+playSelected.onclick=startLevel;
+menuBtn.onclick=showMenu;
+retryBtn.onclick=()=>{selectedLevel=level;startLevel()};
+nextBtn.onclick=()=>{selectedLevel=Math.min(LEVELS.length-1,level+1);startLevel()};
+skillBtn.onclick=useSkill;
+soundBtn.onclick=e=>{soundOn=!soundOn;e.currentTarget.textContent=soundOn?"🔊":"🔇";if(soundOn&&running)startMusic();else stopMusic()};
+document.querySelectorAll(".weapon").forEach(b=>b.onclick=()=>chooseWeapon(b.dataset.w));
+buildStages();refreshWeapons();updateHUD();
+
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
