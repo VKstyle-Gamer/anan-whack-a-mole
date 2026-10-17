@@ -22,15 +22,16 @@
   -webkit-tap-highlight-color:transparent
 }
 html,body{
-  margin:0;min-height:100%;overscroll-behavior:none;
+  margin:0;width:100%;height:100%;overscroll-behavior:none;
   font-family:ui-rounded,"SF Pro Rounded","PingFang TC","Noto Sans TC",system-ui,sans-serif;
-  color:var(--ink);background:#f2eae2;touch-action:manipulation
+  color:var(--ink);background:#f2eae2;touch-action:manipulation;
+  overflow:hidden;
 }
-body{display:flex;justify-content:center;overflow-x:hidden}
+body{display:flex;justify-content:center;position:fixed;inset:0}
 button{font:inherit;color:inherit;touch-action:manipulation}
 .app{
-  width:min(100%,800px);min-height:100vh;position:relative;overflow:hidden;
-  padding:max(10px,env(safe-area-inset-top)) 10px max(24px,env(safe-area-inset-bottom));
+  width:min(100%,800px);height:100dvh;position:relative;overflow:hidden;
+  padding:max(8px,env(safe-area-inset-top)) 10px max(8px,env(safe-area-inset-bottom));
   background:
     radial-gradient(circle at 15% 6%,rgba(255,255,255,.8),transparent 23%),
     linear-gradient(#cde8ee 0 26%,#f3e9df 26% 100%)
@@ -128,6 +129,38 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 .goldRing{position:absolute;left:50%;top:50%;width:32px;height:32px;border:5px solid rgba(255,220,92,.88);border-radius:50%;transform:translate(-50%,-50%);animation:ring .55s ease forwards}
 @keyframes ring{from{opacity:1;transform:translate(-50%,-50%) scale(.4)}to{opacity:0;transform:translate(-50%,-50%) scale(2.2)}}
 
+
+.totalBar{position:relative;z-index:3;margin-bottom:7px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;font-weight:1000}
+.totalBar span:last-child{color:#9a70b0;font-size:18px}
+body.playing .profile{display:none}
+body.playing .weaponInfo{display:none}
+body.playing .top{margin-bottom:5px}
+body.playing .hud{margin-bottom:5px}
+body.playing .levelbar{margin-bottom:5px;padding:7px 11px}
+body.playing .totalBar{margin-bottom:5px;padding:6px 11px}
+body.playing .arena{padding:8px}
+body.playing .weaponBar{margin-top:6px}
+body.playing .weapon{min-height:68px;padding:5px 2px}
+body.playing .skill{margin-top:6px;padding:9px}
+body.playing .charge{margin-top:4px}
+.leaderboardList{margin:12px 0 0;padding:0;list-style:none;text-align:left}
+.leaderboardList li{display:grid;grid-template-columns:34px 1fr auto;gap:8px;align-items:center;padding:9px 10px;margin-bottom:6px;background:#f3ebe4;border-radius:12px;font-weight:900}
+.leaderboardList li:nth-child(1){background:#fff3c5}.leaderboardList li:nth-child(2){background:#ececec}.leaderboardList li:nth-child(3){background:#f4ddcc}
+.rankNo{text-align:center;color:#7f6e79}.rankScore{color:#8e70ab}
+.nameInput{
+  width:100%;border:2px solid #dfd2c8;border-radius:14px;padding:12px 13px;
+  font:inherit;font-weight:900;outline:none;background:white;color:var(--ink);
+  user-select:text!important;-webkit-user-select:text!important;
+  -webkit-touch-callout:default!important;touch-action:auto!important;
+  pointer-events:auto!important;caret-color:#403742
+}
+.nameInput:focus{border-color:#9a7ab3}
+.victoryScore{font-size:34px;font-weight:1000;color:#8e70ab;margin:5px 0}
+.victoryStars{font-size:30px;margin:4px 0 8px}
+.smallNote{font-size:10px;color:#8b7e87;margin-top:8px}
+.inputError{min-height:18px;color:#c45c65;font-size:11px;font-weight:900;margin-top:6px}
+.menuButtons{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+
 @media(max-width:520px){
   .app{padding:8px}.profile{grid-template-columns:1fr 92px}.avatarSvg{width:82px;height:82px}
   .grid{gap:6px}.slot{border-radius:14px}.arena{padding:9px}.hud strong{font-size:14px}
@@ -175,6 +208,10 @@ button{font:inherit;color:inherit;touch-action:manipulation}
   <div class="levelbar card">
     <div><b id="levelName">初次見鼠</b><small id="unlockLine">已解鎖：安安木槌</small></div>
     <div class="target" id="targetText">目標 900</div>
+  </div>
+  <div class="totalBar card">
+    <span>🏆 最終累計總分</span>
+    <span id="totalScore">0</span>
   </div>
 
   <section class="arena" id="arena">
@@ -225,7 +262,40 @@ button{font:inherit;color:inherit;touch-action:manipulation}
       <span class="badge">🏙️ Taipei</span>
     </div>
     <div class="stageGrid" id="stageGrid"></div>
-    <div class="actions"><button class="btn primary" id="playSelected">開始這一關</button></div>
+    <div class="menuButtons">
+      <button class="btn primary" id="playSelected">開始這一關</button>
+      <button class="btn secondary" id="leaderboardBtn">🏆 排行榜</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="overlay hidden" id="leaderboardOverlay">
+  <div class="card modal">
+    <div class="big">🏆</div>
+    <h2>排行榜</h2>
+    <p>記錄在這台裝置上的總分排行榜。</p>
+    <ol class="leaderboardList" id="leaderboardList"></ol>
+    <div class="actions"><button class="btn primary" id="closeLeaderboard">返回</button></div>
+    <div class="smallNote">目前為本機排行榜；換裝置或清除瀏覽器資料後紀錄不會同步。</div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="victoryOverlay">
+  <div class="card modal">
+    <div class="big">👑🐭✨</div>
+    <h2>全 12 關破關！</h2>
+    <div class="victoryStars">⭐⭐⭐</div>
+    <p>你已經完成《安安打地鼠》全部關卡！</p>
+    <div class="victoryScore" id="victoryTotal">0</div>
+    <p>最終累計總分</p>
+    <input class="nameInput" id="playerName" type="text" inputmode="text" autocomplete="name" enterkeyhint="done" maxlength="16" placeholder="輸入你的名字">
+    <div class="inputError" id="playerNameError"></div>
+    <div class="actions">
+      <button class="btn primary" id="submitRanking">登記排行榜</button>
+      <button class="btn secondary" id="victoryMenuBtn">回關卡選擇</button>
+    </div>
+    <div class="smallNote">每一關只採用你的歷史最高分計入總分。</div>
   </div>
 </div>
 
@@ -244,9 +314,12 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 
 <script>
 /* Prevent Android Chrome text-selection / Touch-to-Search interactions while playing */
-document.addEventListener("contextmenu",e=>e.preventDefault(),{passive:false});
-document.addEventListener("selectstart",e=>e.preventDefault(),{passive:false});
-document.addEventListener("dragstart",e=>e.preventDefault(),{passive:false});
+function isEditableTarget(el){
+  return el && (el.matches?.("input, textarea, [contenteditable='true']") || el.closest?.("input, textarea, [contenteditable='true']"));
+}
+document.addEventListener("contextmenu",e=>{if(!isEditableTarget(e.target))e.preventDefault()},{passive:false});
+document.addEventListener("selectstart",e=>{if(!isEditableTarget(e.target))e.preventDefault()},{passive:false});
+document.addEventListener("dragstart",e=>{if(!isEditableTarget(e.target))e.preventDefault()},{passive:false});
 
 const LEVELS=[
 {name:"初次見鼠",time:28,target:900,spawn:850,pool:["wan"]},
@@ -296,9 +369,34 @@ moleEls.forEach(el=>el.addEventListener("pointerdown",e=>attack(Number(el.datase
 let selectedLevel=0, level=0, score=0, combo=0, charge=0, timeLeft=30, running=false, soundOn=true, weapon="basic";
 let spawnTimer=null,countTimer=null,skillMode=null,skillUntil=0,milkDotTimer=null,rapidUntil=0;
 
-let save=JSON.parse(localStorage.getItem("anan_official_save")||'{"unlocked":1,"stars":{},"high":{},"weaponMax":1}');
+let save=JSON.parse(localStorage.getItem("anan_official_save")||'{"unlocked":1,"stars":{},"high":{},"weaponMax":1,"leaderboard":[]}');
+if(!save.stars)save.stars={};
+if(!save.high)save.high={};
+if(!save.leaderboard)save.leaderboard=[];
 function writeSave(){localStorage.setItem("anan_official_save",JSON.stringify(save))}
 function totalStars(){return Object.values(save.stars||{}).reduce((a,b)=>a+b,0)}
+function cumulativeTotal(){
+  let sum=0;
+  for(let i=0;i<LEVELS.length;i++)sum+=Number(save.high[i]||0);
+  return sum;
+}
+function refreshTotal(){totalScore.textContent=cumulativeTotal().toLocaleString("en-US")}
+function leaderboardRows(){
+  return [...(save.leaderboard||[])].sort((a,b)=>b.score-a.score || a.time-b.time).slice(0,10);
+}
+function renderLeaderboard(){
+  const rows=leaderboardRows();
+  leaderboardList.innerHTML=rows.length?rows.map((r,i)=>`<li><span class="rankNo">${i+1}</span><span>${escapeHtml(r.name)}</span><span class="rankScore">${Number(r.score).toLocaleString("en-US")}</span></li>`).join(""):`<li><span class="rankNo">—</span><span>尚無紀錄</span><span class="rankScore">0</span></li>`;
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function addLeaderboard(name,score){
+  const clean=String(name||"").trim().slice(0,16);
+  if(!clean)return false;
+  save.leaderboard.push({name:clean,score:Number(score)||0,time:Date.now()});
+  save.leaderboard=leaderboardRows();
+  writeSave();
+  return true;
+}
 function isWeaponUnlocked(k){return save.unlocked>=WEAPONS[k].unlock}
 function availableWeaponNames(){return Object.keys(WEAPONS).filter(isWeaponUnlocked).map(k=>WEAPONS[k].name)}
 
@@ -312,10 +410,13 @@ function buildStages(){
   });
   starBadge.textContent="⭐ "+totalStars();
   weaponBadge.textContent="🔨 "+Object.keys(WEAPONS).filter(isWeaponUnlocked).length+" / 4";
+  refreshTotal();
 }
 function showMenu(){
-  running=false;clearTimeout(spawnTimer);clearInterval(countTimer);clearInterval(milkDotTimer);stopMusic();
-  resultOverlay.classList.add("hidden");menuOverlay.classList.remove("hidden");buildStages();
+  running=false;document.body.classList.remove("playing");
+  clearTimeout(spawnTimer);clearInterval(countTimer);clearInterval(milkDotTimer);stopMusic();
+  resultOverlay.classList.add("hidden");victoryOverlay.classList.add("hidden");leaderboardOverlay.classList.add("hidden");
+  menuOverlay.classList.remove("hidden");buildStages();
 }
 function setupLevel(){
   level=selectedLevel;
@@ -323,6 +424,7 @@ function setupLevel(){
   score=0;combo=0;charge=0;timeLeft=L.time;skillMode=null;
   levelNum.textContent=level+1;levelName.textContent=L.name;targetText.textContent="目標 "+L.target;time.textContent=timeLeft;
   unlockLine.textContent="已解鎖："+availableWeaponNames().join("、");
+  refreshTotal();
   if(!isWeaponUnlocked(weapon))weapon="basic";
   refreshWeapons();updateHUD();
   headline.textContent=L.chaos?"⚠️ 安鼠之亂爆發！":L.boss?"👑 鼠王壓境":"今天也要把鼠鼠敲回去。";
@@ -330,7 +432,8 @@ function setupLevel(){
   if(L.chaos||L.boss){skillBanner.textContent=L.chaos?"⚠️ 安鼠之亂 ⚠️":"👑 鼠王壓境 👑";showBanner()}
 }
 function startLevel(){
-  menuOverlay.classList.add("hidden");resultOverlay.classList.add("hidden");
+  menuOverlay.classList.add("hidden");resultOverlay.classList.add("hidden");leaderboardOverlay.classList.add("hidden");victoryOverlay.classList.add("hidden");
+  document.body.classList.add("playing");
   setupLevel();running=true;startMusic();schedule();
   countTimer=setInterval(()=>{
     timeLeft--;time.textContent=timeLeft;
@@ -450,17 +553,34 @@ function goldBurst(i){
 
 function starsFor(score,target){if(score>=target*1.55)return 3;if(score>=target*1.2)return 2;return 1}
 function finish(){
-  if(!running)return;running=false;clearTimeout(spawnTimer);clearInterval(countTimer);clearInterval(milkDotTimer);stopMusic();active.forEach((x,i)=>hide(i));
+  if(!running)return;
+  running=false;document.body.classList.remove("playing");
+  clearTimeout(spawnTimer);clearInterval(countTimer);clearInterval(milkDotTimer);stopMusic();active.forEach((x,i)=>hide(i));
   const L=LEVELS[level],ok=score>=L.target;
   if(ok){
-    const stars=starsFor(score,L.target);save.stars[level]=Math.max(save.stars[level]||0,stars);save.high[level]=Math.max(save.high[level]||0,score);
-    save.unlocked=Math.max(save.unlocked,Math.min(LEVELS.length,level+2));writeSave();
+    const stars=starsFor(score,L.target);
+    save.stars[level]=Math.max(save.stars[level]||0,stars);
+    save.high[level]=Math.max(Number(save.high[level]||0),score); // 只保留該關歷史最高分
+    save.unlocked=Math.max(save.unlocked,Math.min(LEVELS.length,level+2));
+    writeSave();refreshTotal();
+    if(level===LEVELS.length-1){
+      victoryTotal.textContent=cumulativeTotal().toLocaleString("en-US");
+      document.getElementById("playerName").value="";
+      document.getElementById("playerNameError").textContent="";
+      victoryOverlay.classList.remove("hidden");
+      setTimeout(()=>document.getElementById("playerName")?.focus(),250);
+      resultTune(true);
+      return;
+    }
     resultIcon.textContent="🎉";resultTitle.textContent="CLEAR!";
     const newly=Object.entries(WEAPONS).filter(([k,w])=>w.unlock===level+2).map(([k,w])=>w.name);
-    resultText.textContent=`${"⭐".repeat(stars)}　分數 ${score}。`+(newly.length?` 新武器解鎖：${newly.join("、")}！`:"");
+    const best=save.high[level];
+    resultText.textContent=`${"⭐".repeat(stars)}　本次 ${score.toLocaleString("en-US")} 分｜本關最高 ${Number(best).toLocaleString("en-US")} 分。`+(newly.length?` 新武器解鎖：${newly.join("、")}！`:"");
     nextBtn.style.display="inline-block";
   }else{
-    resultIcon.textContent="🐭";resultTitle.textContent="再差一點";resultText.textContent=`目標 ${L.target}，這次 ${score} 分。`;nextBtn.style.display="none";
+    resultIcon.textContent="🐭";resultTitle.textContent="再差一點";
+    resultText.textContent=`目標 ${L.target}，這次 ${score.toLocaleString("en-US")} 分。`;
+    nextBtn.style.display="none";
   }
   resultOverlay.classList.remove("hidden");resultTune(ok);
 }
@@ -506,13 +626,41 @@ function resultTune(ok){(ok?[72,76,79,84,88]:[69,67,64,60]).forEach((n,i)=>tone(
 function uiChime(){tone(76,.07,.02,"sine");tone(83,.08,.016,"sine",.045)}
 
 playSelected.onclick=startLevel;
+leaderboardBtn.onclick=()=>{renderLeaderboard();menuOverlay.classList.add("hidden");leaderboardOverlay.classList.remove("hidden")};
+closeLeaderboard.onclick=()=>{leaderboardOverlay.classList.add("hidden");menuOverlay.classList.remove("hidden");buildStages()};
+victoryMenuBtn.onclick=showMenu;
+submitRanking.onclick=()=>{
+  const input=document.getElementById("playerName");
+  const err=document.getElementById("playerNameError");
+  const name=(input?.value||"").trim();
+  if(!name){
+    err.textContent="請先輸入名字再登記排行榜";
+    input?.focus();
+    return;
+  }
+  err.textContent="";
+  if(!addLeaderboard(name,cumulativeTotal()))return;
+  renderLeaderboard();
+  victoryOverlay.classList.add("hidden");
+  leaderboardOverlay.classList.remove("hidden");
+  input.value="";
+};
 menuBtn.onclick=showMenu;
 retryBtn.onclick=()=>{selectedLevel=level;startLevel()};
 nextBtn.onclick=()=>{selectedLevel=Math.min(LEVELS.length-1,level+1);startLevel()};
 skillBtn.onclick=useSkill;
+document.getElementById("playerName").addEventListener("input",()=>{
+  document.getElementById("playerNameError").textContent="";
+});
+document.getElementById("playerName").addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+    e.preventDefault();
+    document.getElementById("submitRanking").click();
+  }
+});
 soundBtn.onclick=e=>{soundOn=!soundOn;e.currentTarget.textContent=soundOn?"🔊":"🔇";if(soundOn&&running)startMusic();else stopMusic()};
 document.querySelectorAll(".weapon").forEach(b=>b.onclick=()=>chooseWeapon(b.dataset.w));
-buildStages();refreshWeapons();updateHUD();
+buildStages();refreshWeapons();updateHUD();refreshTotal();
 
 if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>

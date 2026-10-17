@@ -2,6 +2,7 @@
   "name": "安安打地鼠",
   "short_name": "安安打地鼠",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f3e9df",
   "theme_color": "#8e70ab",
