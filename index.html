@@ -50,7 +50,7 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 .avatarCard{display:grid;place-items:center;padding:2px;overflow:hidden}
 .avatarSvg{width:92px;height:92px}
 
-.hud{position:relative;z-index:3;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:7px}
+.hud{position:relative;z-index:3;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:7px}
 .hud .card{text-align:center;padding:7px 4px}
 .hud small{display:block;font-size:9px;color:#8e818a;font-weight:900}
 .hud strong{font-size:15px}
@@ -161,6 +161,118 @@ body.playing .charge{margin-top:4px}
 .inputError{min-height:18px;color:#c45c65;font-size:11px;font-weight:900;margin-top:6px}
 .menuButtons{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:10px}
 
+
+.coinValue{color:#b48718}
+.cardGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px;max-height:62vh;overflow:auto;padding:2px}
+.cardItem{background:#f3ebe4;border-radius:16px;padding:8px;text-align:left;position:relative}
+.cardItem img{width:100%;border-radius:10px;display:block;box-shadow:0 8px 18px rgba(60,40,50,.14)}
+.cardItem h3{font-size:14px;margin:7px 0 3px}.cardItem p{font-size:10px;line-height:1.4;margin:0;color:#776b75;font-weight:800}
+.cardOwned{position:absolute;top:14px;right:14px;background:#5b8d70;color:white;border-radius:999px;padding:3px 7px;font-size:9px;font-weight:1000}
+.price{font-size:12px;font-weight:1000;color:#b48718;margin-top:5px}
+.buyBtn{width:100%;border:0;border-radius:11px;padding:8px;margin-top:6px;background:#62566c;color:white;font-weight:1000}
+.buyBtn:disabled{opacity:.45}
+.slowField{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(214,236,255,.35),rgba(116,100,177,.18),transparent 70%);animation:slowPulse 1.3s infinite alternate;pointer-events:none}
+.slowField:before{content:"☂️  0.5×  SLOW";position:absolute;top:11%;left:50%;transform:translateX(-50%);padding:7px 13px;border-radius:999px;background:rgba(74,56,91,.82);color:white;font-weight:1000;font-size:17px;white-space:nowrap}
+@keyframes slowPulse{from{opacity:.55}to{opacity:1}}
+.spreadRing{position:absolute;width:30px;height:30px;border:3px solid rgba(255,235,134,.9);border-radius:50%;transform:translate(-50%,-50%) scale(.3);animation:spreadRing .5s ease-out forwards}
+@keyframes spreadRing{to{opacity:0;transform:translate(-50%,-50%) scale(4)}}
+.mole.slowed{transition-duration:.28s;filter:drop-shadow(0 0 8px rgba(200,220,255,.8))}
+.onlineStatus{font-size:10px;font-weight:900;color:#8a7d87;margin:5px 0 0}
+.onlineStatus.ok{color:#498661}.onlineStatus.bad{color:#b05d65}
+
+.flipCardThumb,.zoomFlipCard{
+  position:relative;perspective:1000px;cursor:pointer;touch-action:pan-y;
+}
+.flipInner3d{position:relative;width:100%;transform-style:preserve-3d;transition:transform .45s ease}
+.flipCardThumb.flipped .flipInner3d,.zoomFlipCard.flipped .flipInner3d{transform:rotateY(180deg)}
+.flipFace3d{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:12px;overflow:hidden;box-shadow:0 8px 18px rgba(60,40,50,.14);background:#fff;
+}
+.flipFace3d img{width:100%;height:100%;object-fit:cover;display:block}
+.flipBack3d{transform:rotateY(180deg)}
+.cardThumbBox{aspect-ratio:0.72/1;position:relative}
+.flipHint{font-size:9px;color:#7e717a;font-weight:900;text-align:center;margin-top:5px}
+.zoomOverlayCard{max-width:min(92vw,430px)}
+.zoomFlipCard{width:min(100%,340px);margin:10px auto}
+.zoomFlipCard .cardThumbBox{aspect-ratio:0.72/1}
+.zoomActions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.tapHint{font-size:10px;color:#7d727a;font-weight:900;margin-top:4px}
+
+
+/* Premium collection / shop styling */
+.collectionBackdrop .modal,.shopBackdrop .modal{background:linear-gradient(180deg,#fffdf6 0%,#f5edf7 48%,#f2e7df 100%)}
+.cardGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:4px 2px 2px}
+.cardItem{
+  background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(248,238,229,.96));
+  border:1px solid rgba(255,255,255,.7);
+  box-shadow:0 10px 28px rgba(70,48,62,.12), inset 0 1px 0 rgba(255,255,255,.7);
+  border-radius:20px;padding:10px 10px 12px;text-align:left;position:relative;overflow:hidden
+}
+.cardItem:before{
+  content:"";position:absolute;inset:-30% auto auto -20%;width:70%;height:36%;
+  background:linear-gradient(120deg,rgba(255,255,255,.65),rgba(255,255,255,0));
+  transform:rotate(-8deg);pointer-events:none
+}
+.cardItem h3{font-size:14px;margin:8px 0 4px;display:flex;align-items:center;gap:6px}
+.cardItem p{font-size:10px;line-height:1.52;margin:0;color:#6f626c;font-weight:800}
+.rarityBadge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;padding:2px 6px;border-radius:999px;font-size:10px;font-weight:1000;color:white}
+.rN{background:#7c8aa6}.rR{background:#9a55c9}.rSR{background:#df8231}.rUR{background:linear-gradient(90deg,#c19215,#e6bf50)}
+.priceRow{display:flex;align-items:center;justify-content:space-between;margin-top:7px}
+.buyBtn{width:100%;border:0;border-radius:12px;padding:9px;margin-top:7px;background:linear-gradient(180deg,#6f607a,#584d61);color:white;font-weight:1000;box-shadow:0 5px 10px rgba(60,45,56,.16)}
+.buyBtn:not(:disabled):active{transform:translateY(1px)}
+.cardOwned{top:12px;right:12px;background:linear-gradient(180deg,#66a37c,#4f8a66);padding:4px 8px;font-size:9px;letter-spacing:.4px}
+.collectionOverlayTitleNote,.shopOverlayTitleNote{font-size:11px;font-weight:900;color:#897b84}
+/* Zoom glow */
+.zoomOverlayCard{
+  max-width:min(92vw,430px);
+  background:radial-gradient(circle at 50% 0%,rgba(255,251,211,.95),rgba(255,255,255,.96) 22%,rgba(243,234,242,.98) 70%,rgba(241,231,224,.98) 100%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.7),0 0 30px rgba(255,230,151,.45),0 0 90px rgba(170,117,255,.18),0 18px 44px rgba(45,30,54,.28)
+}
+.zoomOverlayCard:before{
+  content:"";position:absolute;inset:-18px;border-radius:32px;pointer-events:none;
+  background:conic-gradient(from 0deg, rgba(255,232,145,.0), rgba(255,232,145,.65), rgba(197,139,255,.35), rgba(255,232,145,.0));
+  filter:blur(18px);z-index:-1;animation:cardGlowSpin 5s linear infinite;
+}
+@keyframes cardGlowSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.zoomFlipCard .flipFace3d{box-shadow:0 0 0 1px rgba(255,255,255,.7),0 0 18px rgba(255,237,168,.9),0 0 48px rgba(179,142,255,.32),0 10px 30px rgba(35,20,42,.35)}
+/* Pack opening */
+.packOverlay .modal{background:radial-gradient(circle at 50% 0%,#fff7d8 0%,#f8f0fd 36%,#f3e8df 100%)}
+.packStage{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:420px}
+.packWrapper{position:relative;width:min(78vw,280px);aspect-ratio:.72/1;perspective:1000px}
+.packFoil,.rewardCard{
+  position:absolute;inset:0;border-radius:22px;overflow:hidden;display:flex;align-items:center;justify-content:center;
+  transition:transform .65s ease, opacity .5s ease, filter .45s ease
+}
+.packFoil{
+  background:linear-gradient(160deg,#7d4cd6 0%,#c06fd0 28%,#f8d67f 62%,#8b5de7 100%);
+  box-shadow:0 18px 40px rgba(69,45,96,.32), inset 0 1px 0 rgba(255,255,255,.55);
+  color:white;text-align:center;padding:18px;font-weight:1000
+}
+.packFoil:before{
+  content:"";position:absolute;inset:-40%;background:linear-gradient(100deg,rgba(255,255,255,0),rgba(255,255,255,.55),rgba(255,255,255,0));
+  animation:packShine 2.2s linear infinite
+}
+@keyframes packShine{from{transform:translateX(-55%) rotate(18deg)}to{transform:translateX(55%) rotate(18deg)}}
+.packFoil.opening{transform:scale(.95) rotateY(-88deg);opacity:0;filter:brightness(1.1)}
+.packTitle{font-size:24px;text-shadow:0 2px 8px rgba(0,0,0,.24)}
+.packSub{font-size:12px;margin-top:8px;opacity:.95}
+.rewardCard{opacity:0;transform:scale(.78) rotateY(86deg);transform-style:preserve-3d}
+.rewardCard.show{opacity:1;transform:scale(1) rotateY(0)}
+.rewardCard .flipFace3d{box-shadow:0 0 0 1px rgba(255,255,255,.8),0 0 22px rgba(255,240,161,.9),0 0 58px rgba(189,142,255,.42),0 18px 42px rgba(42,26,52,.34)}
+.openBurst{position:absolute;inset:-8%;pointer-events:none;opacity:0}
+.openBurst.show{opacity:1}
+.openBurst:before,.openBurst:after{
+  content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(255,245,170,.85) 0,rgba(255,245,170,.08) 42%,transparent 70%);
+  filter:blur(4px);animation:burstPulse 1.25s ease infinite alternate
+}
+.openBurst:after{animation-delay:.35s;background:radial-gradient(circle,rgba(204,157,255,.56) 0,rgba(204,157,255,.06) 42%,transparent 70%)}
+@keyframes burstPulse{from{transform:scale(.82)}to{transform:scale(1.08)}}
+.packButtons{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.packHint{font-size:11px;font-weight:900;color:#857782}
+
+@media(max-width:520px){.cardGrid{grid-template-columns:1fr 1fr}.cardItem h3{font-size:12px}.cardItem p{font-size:9px}}
+
 @media(max-width:520px){
   .app{padding:8px}.profile{grid-template-columns:1fr 92px}.avatarSvg{width:82px;height:82px}
   .grid{gap:6px}.slot{border-radius:14px}.arena{padding:9px}.hud strong{font-size:14px}
@@ -203,6 +315,7 @@ body.playing .charge{margin-top:4px}
     <div class="card"><small>SCORE</small><strong id="score">0</strong></div>
     <div class="card"><small>COMBO</small><strong id="combo">0</strong></div>
     <div class="card"><small>TIME</small><strong id="time">30</strong></div>
+    <div class="card"><small>COIN</small><strong class="coinValue" id="coinCount">0</strong></div>
   </div>
 
   <div class="levelbar card">
@@ -265,16 +378,90 @@ body.playing .charge{margin-top:4px}
     <div class="menuButtons">
       <button class="btn primary" id="playSelected">開始這一關</button>
       <button class="btn secondary" id="leaderboardBtn">🏆 排行榜</button>
+      <button class="btn secondary" id="collectionBtn">🃏 卡牌收集冊</button>
+      <button class="btn secondary" id="shopBtn">🪙 卡牌商城</button>
     </div>
   </div>
 </div>
 
 
+
+
+<div class="overlay hidden collectionBackdrop" id="collectionOverlay">
+  <div class="card modal">
+    <div class="big">🃏</div>
+    <h2>卡牌收集冊</h2>
+    <p class="collectionOverlayTitleNote">收藏後效果永久生效。卡片可左右滑動翻面，點一下可放大查看。</p>
+    <div class="cardGrid" id="collectionGrid"></div>
+    <div class="actions"><button class="btn primary" id="closeCollection">返回</button></div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="cardZoomOverlay">
+  <div class="card modal zoomOverlayCard">
+    <div class="big">🔍🃏</div>
+    <h2 id="zoomCardTitle">卡牌預覽</h2>
+    <div class="zoomFlipCard" id="zoomFlipCard">
+      <div class="cardThumbBox">
+        <div class="flipInner3d" id="zoomFlipInner"></div>
+      </div>
+    </div>
+    <div class="tapHint">左右滑動可翻面</div>
+    <div class="zoomActions">
+      <button class="btn secondary" id="zoomFlipBtn">翻面</button>
+      <button class="btn primary" id="closeZoomCard">關閉</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="overlay hidden shopBackdrop" id="shopOverlay">
+  <div class="card modal">
+    <div class="big">🪙🃏</div>
+    <h2>卡牌商城</h2>
+    <p class="shopOverlayTitleNote">目前金幣：<b class="coinValue" id="shopCoinCount">0</b>　｜　購買後會有開包入手動畫</p>
+    <div class="cardGrid" id="shopGrid"></div>
+    <div class="actions"><button class="btn primary" id="closeShop">返回</button></div>
+  </div>
+</div>
+
+
+<div class="overlay hidden packOverlay" id="packOverlay">
+  <div class="card modal">
+    <div class="big">✨🃏</div>
+    <h2 id="packTitle">卡牌入手！</h2>
+    <div class="packStage">
+      <div class="packWrapper">
+        <div class="openBurst" id="openBurst"></div>
+        <div class="packFoil" id="packFoil">
+          <div>
+            <div class="packTitle">AN-AN CARD PACK</div>
+            <div class="packSub">點擊或按下按鈕，打開卡包</div>
+          </div>
+        </div>
+        <div class="rewardCard" id="rewardCard">
+          <div class="cardThumbBox">
+            <div class="flipInner3d" id="rewardFlipInner"></div>
+          </div>
+        </div>
+      </div>
+      <div class="packHint" id="packHint">先打開卡包，再點卡牌翻面看看</div>
+      <div class="packButtons">
+        <button class="btn secondary" id="packOpenBtn">開包</button>
+        <button class="btn secondary hidden" id="packFlipBtn">翻面</button>
+        <button class="btn primary hidden" id="packCloseBtn">收下卡牌</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="overlay hidden" id="leaderboardOverlay">
   <div class="card modal">
     <div class="big">🏆</div>
     <h2>排行榜</h2>
-    <p>記錄在這台裝置上的總分排行榜。</p>
+    <p>排行榜會優先讀取線上資料；未連線時自動使用本機備援。</p>
+    <div class="onlineStatus" id="onlineStatus">檢查線上排行榜中…</div>
     <ol class="leaderboardList" id="leaderboardList"></ol>
     <div class="actions"><button class="btn primary" id="closeLeaderboard">返回</button></div>
     <div class="smallNote">目前為本機排行榜；換裝置或清除瀏覽器資料後紀錄不會同步。</div>
@@ -343,7 +530,7 @@ gold:`<svg class="moleSvg" viewBox="0 0 120 130"><ellipse cx="60" cy="85" rx="38
 };
 const MOLES={
 wan:{name:"萬屁鼠",score:100,hp:1,stay:930,svg:SVG.wan},
-salon:{name:"沙龍趴鼠",score:175,hp:1,stay:745,svg:SVG.salon},
+salon:{name:"沙隆趴鼠",score:175,hp:1,stay:745,svg:SVG.salon},
 knee:{name:"膝當普利鼠",score:285,hp:2,stay:1240,svg:SVG.knee},
 gold:{name:"黃金萬屁鼠",score:520,hp:1,stay:560,svg:SVG.gold}
 };
@@ -351,7 +538,7 @@ const WEAPONS={
 basic:{name:"安安木槌",unlock:1,skill:"🔨 安安暴走！",info:"單體攻擊；充能最快。必殺會瞬間清場並進入 3 秒快速充能。"},
 milk:{name:"鮮乳鎚",unlock:2,skill:"🥛 生生喝鮮乳！",info:"命中濺射上下左右。必殺：奶浪全場傷害 2 點＋6 秒暈眩、雙倍分數、持續奶滴傷害。"},
 squid:{name:"小卷鎚",unlock:4,skill:"🦑 營養午餐大爆發！",info:"每次命中自動追打一隻其他鼠。必殺：墨汁覆蓋＋全場重擊清場。"},
-umbrella:{name:"百萬遮陽傘",unlock:6,skill:"☂️ 百萬遮陽傘！",info:"平常整排掃擊。必殺：三波大掃擊依序掃過全場。"}
+umbrella:{name:"百萬遮陽傘",unlock:6,skill:"☂️ 百萬遮陽傘・慢速領域！",info:"普攻為擴散攻擊。必殺開啟 10 秒全場 0.5 倍速，鼠鼠停留時間加倍，並追加三波全場傘擊。"}
 };
 
 const grid=document.getElementById("grid");
@@ -367,12 +554,36 @@ const moleEls=[...document.querySelectorAll(".mole")];
 moleEls.forEach(el=>el.addEventListener("pointerdown",e=>attack(Number(el.dataset.i),e)));
 
 let selectedLevel=0, level=0, score=0, combo=0, charge=0, timeLeft=30, running=false, soundOn=true, weapon="basic";
-let spawnTimer=null,countTimer=null,skillMode=null,skillUntil=0,milkDotTimer=null,rapidUntil=0;
+let spawnTimer=null,countTimer=null,skillMode=null,skillUntil=0,milkDotTimer=null,rapidUntil=0,umbrellaSlowUntil=0,umbrellaPulseTimers=[];
 
-let save=JSON.parse(localStorage.getItem("anan_official_save")||'{"unlocked":1,"stars":{},"high":{},"weaponMax":1,"leaderboard":[]}');
+let save=JSON.parse(localStorage.getItem("anan_official_save")||'{"unlocked":1,"stars":{},"high":{},"weaponMax":1,"leaderboard":[],"coins":0,"cards":{}}');
 if(!save.stars)save.stars={};
 if(!save.high)save.high={};
 if(!save.leaderboard)save.leaderboard=[];
+if(!Number.isFinite(Number(save.coins)))save.coins=0;
+save.coins=Number(save.coins)||0;
+if(!save.cards)save.cards={};
+
+const CARDS={
+  wan:{name:"萬屁鼠",rarity:"N",price:15,img:"assets/card_wan_front.jpg",back:"assets/card_wan_back.jpg",full:"assets/card_wan_full.png",effect:"常駐 10% 爆擊機率：爆擊會瞬間擊倒普通鼠並獲得 2 倍擊殺分數。"},
+  salon:{name:"沙隆趴鼠",rarity:"R",price:30,img:"assets/card_salon_front.jpg",back:"assets/card_salon_back.jpg",full:"assets/card_salon_full.png",effect:"施放絕招時爆擊率 100%。"},
+  knee:{name:"膝當普利鼠",rarity:"SR",price:50,img:"assets/card_knee_front.jpg",back:"assets/card_knee_back.jpg",full:"assets/card_knee_full.png",effect:"絕招期間／絕招造成的擊殺，得分 ×2。"},
+  gold:{name:"黃金萬屁鼠",rarity:"UR",price:100,img:"assets/card_gold_front.jpg",back:"assets/card_gold_back.jpg",full:"assets/card_gold_full.png",effect:"所有金幣獲取量永久 ×2。"}
+};
+function hasCard(k){return !!save.cards[k]}
+function coinMultiplier(){return hasCard("gold")?2:1}
+function refreshCoins(){
+  coinCount.textContent=save.coins;
+  const s=document.getElementById("shopCoinCount");if(s)s.textContent=save.coins;
+}
+
+/* 線上排行榜：填入 Supabase 專案資料後即可跨裝置共用。 */
+const ONLINE_CONFIG={
+  supabaseUrl:"",
+  supabaseAnonKey:""
+};
+function onlineConfigured(){return !!(ONLINE_CONFIG.supabaseUrl && ONLINE_CONFIG.supabaseAnonKey)}
+
 function writeSave(){localStorage.setItem("anan_official_save",JSON.stringify(save))}
 function totalStars(){return Object.values(save.stars||{}).reduce((a,b)=>a+b,0)}
 function cumulativeTotal(){
@@ -397,6 +608,202 @@ function addLeaderboard(name,score){
   writeSave();
   return true;
 }
+
+
+function buildCollection(){
+  collectionGrid.innerHTML=Object.entries(CARDS).map(([k,c])=>{
+    const rarityClass=`r${c.rarity.replace(/[^A-Z]/g,"")}`;
+    return `
+    <div class="cardItem">
+      ${hasCard(k)?'<span class="cardOwned">OWNED</span>':''}
+      <div class="flipCardThumb" data-card="${k}">
+        <div class="cardThumbBox">
+          <div class="flipInner3d">
+            <div class="flipFace3d flipFront3d"><img src="${c.img}" alt="${c.name} 正面"></div>
+            <div class="flipFace3d flipBack3d"><img src="${c.back}" alt="${c.name} 背面"></div>
+          </div>
+        </div>
+      </div>
+      <div class="flipHint">↔ 左右滑動翻面・點擊放大</div>
+      <h3><span class="rarityBadge ${rarityClass}">${c.rarity}</span><span>${c.name}</span></h3>
+      <p>${c.effect}</p>
+    </div>`}).join("");
+  attachFlipInteractions(collectionGrid);
+}
+
+
+function attachFlipInteractions(root){
+  root.querySelectorAll(".flipCardThumb").forEach(card=>{
+    let startX=0,startY=0,moved=false;
+    card.addEventListener("pointerdown",e=>{startX=e.clientX;startY=e.clientY;moved=false;});
+    card.addEventListener("pointermove",e=>{
+      if(Math.abs(e.clientX-startX)>18 || Math.abs(e.clientY-startY)>18)moved=true;
+    });
+    card.addEventListener("pointerup",e=>{
+      const dx=e.clientX-startX, dy=e.clientY-startY;
+      if(Math.abs(dx)>28 && Math.abs(dx)>Math.abs(dy)){
+        card.classList.toggle("flipped", dx<0 ? true : false);
+        if(dx>0) card.classList.remove("flipped");
+        if(dx<0) card.classList.add("flipped");
+      }else if(!moved){
+        openCardZoom(card.dataset.card, card.classList.contains("flipped"));
+      }
+    });
+  });
+}
+let currentZoomCardKey=null;
+function openCardZoom(key, flipped=false){
+  const c=CARDS[key]; if(!c) return;
+  currentZoomCardKey=key;
+  zoomCardTitle.textContent=`${c.rarity}｜${c.name}`;
+  zoomFlipInner.innerHTML=`
+    <div class="flipFace3d flipFront3d"><img src="${c.img}" alt="${c.name} 正面"></div>
+    <div class="flipFace3d flipBack3d"><img src="${c.back}" alt="${c.name} 背面"></div>`;
+  zoomFlipCard.classList.toggle("flipped", !!flipped);
+  cardZoomOverlay.classList.remove("hidden");
+}
+function toggleZoomCard(){
+  zoomFlipCard.classList.toggle("flipped");
+}
+function attachZoomSwipe(){
+  let sx=0,sy=0,moved=false;
+  zoomFlipCard.addEventListener("pointerdown",e=>{sx=e.clientX;sy=e.clientY;moved=false;});
+  zoomFlipCard.addEventListener("pointermove",e=>{ if(Math.abs(e.clientX-sx)>18 || Math.abs(e.clientY-sy)>18)moved=true; });
+  zoomFlipCard.addEventListener("pointerup",e=>{
+    const dx=e.clientX-sx, dy=e.clientY-sy;
+    if(Math.abs(dx)>28 && Math.abs(dx)>Math.abs(dy)){
+      if(dx<0) zoomFlipCard.classList.add("flipped");
+      else zoomFlipCard.classList.remove("flipped");
+    }else if(!moved){
+      toggleZoomCard();
+    }
+  });
+}
+
+function buildShop(){
+  refreshCoins();
+  shopGrid.innerHTML=Object.entries(CARDS).map(([k,c])=>{
+    const owned=hasCard(k), can=save.coins>=c.price;
+    const rarityClass=`r${c.rarity.replace(/[^A-Z]/g,"")}`;
+    return `<div class="cardItem">
+      ${owned?'<span class="cardOwned">OWNED</span>':''}
+      <div class="flipCardThumb" data-card="${k}">
+        <div class="cardThumbBox">
+          <div class="flipInner3d">
+            <div class="flipFace3d flipFront3d"><img src="${c.img}" alt="${c.name} 正面"></div>
+            <div class="flipFace3d flipBack3d"><img src="${c.back}" alt="${c.name} 背面"></div>
+          </div>
+        </div>
+      </div>
+      <div class="flipHint">↔ 左右滑動翻面・點擊放大</div>
+      <h3><span class="rarityBadge ${rarityClass}">${c.rarity}</span><span>${c.name}</span></h3>
+      <p>${c.effect}</p>
+      <div class="priceRow"><div class="price">🪙 ${c.price}</div></div>
+      <button class="buyBtn" data-card="${k}" ${owned||!can?"disabled":""}>${owned?"已收藏":can?"購買卡牌":"金幣不足"}</button>
+    </div>`;
+  }).join("");
+  attachFlipInteractions(shopGrid);
+  shopGrid.querySelectorAll(".buyBtn").forEach(b=>b.onclick=(e)=>{e.stopPropagation();buyCard(b.dataset.card)});
+}
+function buyCard(k){
+  const c=CARDS[k];if(!c||hasCard(k)||save.coins<c.price)return;
+  save.coins-=c.price;save.cards[k]=true;writeSave();refreshCoins();
+  openPackSequence(k);
+}
+
+let pendingBoughtCard=null;
+function setupRewardCard(key){
+  const c=CARDS[key]; if(!c) return;
+  rewardFlipInner.innerHTML=`
+    <div class="flipFace3d flipFront3d"><img src="${c.img}" alt="${c.name} 正面"></div>
+    <div class="flipFace3d flipBack3d"><img src="${c.back}" alt="${c.name} 背面"></div>`;
+}
+function openPackSequence(key){
+  pendingBoughtCard=key;
+  const c=CARDS[key]; if(!c) return;
+  setupRewardCard(key);
+  packTitle.textContent=`入手 ${c.rarity}｜${c.name}！`;
+  packHint.textContent="先點『開包』，之後可點卡牌或按翻面觀看正反面";
+  rewardCard.classList.remove("show","flipped");
+  packFoil.classList.remove("opening","hidden");
+  openBurst.classList.remove("show");
+  packFlipBtn.classList.add("hidden");
+  packCloseBtn.classList.add("hidden");
+  packOpenBtn.classList.remove("hidden");
+  packOverlay.classList.remove("hidden");
+}
+function revealBoughtCard(){
+  packFoil.classList.add("opening");
+  setTimeout(()=>{
+    packFoil.classList.add("hidden");
+    rewardCard.classList.add("show");
+    openBurst.classList.add("show");
+    packOpenBtn.classList.add("hidden");
+    packFlipBtn.classList.remove("hidden");
+    packCloseBtn.classList.remove("hidden");
+    uiChime(); setTimeout(uiChime,90); setTimeout(uiChime,180);
+  },420);
+}
+function togglePackCard(){
+  rewardCard.classList.toggle("flipped");
+}
+function closePackSequence(){
+  packOverlay.classList.add("hidden");
+  rewardCard.classList.remove("show","flipped");
+  packFoil.classList.remove("opening","hidden");
+  openBurst.classList.remove("show");
+  buildShop(); buildCollection();
+}
+function attachRewardSwipe(){
+  let sx=0,sy=0,moved=false;
+  rewardCard.addEventListener("pointerdown",e=>{sx=e.clientX;sy=e.clientY;moved=false;});
+  rewardCard.addEventListener("pointermove",e=>{if(Math.abs(e.clientX-sx)>18 || Math.abs(e.clientY-sy)>18)moved=true;});
+  rewardCard.addEventListener("pointerup",e=>{
+    if(!rewardCard.classList.contains("show")) return;
+    const dx=e.clientX-sx, dy=e.clientY-sy;
+    if(Math.abs(dx)>28 && Math.abs(dx)>Math.abs(dy)){
+      if(dx<0) rewardCard.classList.add("flipped");
+      else rewardCard.classList.remove("flipped");
+    }else if(!moved){
+      togglePackCard();
+    }
+  });
+}
+
+async function fetchOnlineRows(){
+  if(!onlineConfigured())return null;
+  try{
+    const u=ONLINE_CONFIG.supabaseUrl.replace(/\/$/,"")+"/rest/v1/anan_leaderboard?select=name,score,created_at&order=score.desc,created_at.asc&limit=10";
+    const r=await fetch(u,{headers:{apikey:ONLINE_CONFIG.supabaseAnonKey,Authorization:"Bearer "+ONLINE_CONFIG.supabaseAnonKey}});
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    return await r.json();
+  }catch(e){return null}
+}
+async function submitOnlineScore(name,score){
+  if(!onlineConfigured())return false;
+  try{
+    const u=ONLINE_CONFIG.supabaseUrl.replace(/\/$/,"")+"/rest/v1/anan_leaderboard";
+    const r=await fetch(u,{method:"POST",headers:{
+      apikey:ONLINE_CONFIG.supabaseAnonKey,
+      Authorization:"Bearer "+ONLINE_CONFIG.supabaseAnonKey,
+      "Content-Type":"application/json",
+      Prefer:"return=minimal"
+    },body:JSON.stringify({name:String(name).slice(0,16),score:Number(score)||0})});
+    return r.ok;
+  }catch(e){return false}
+}
+async function renderBestLeaderboard(){
+  onlineStatus.textContent="讀取線上排行榜中…";onlineStatus.className="onlineStatus";
+  const online=await fetchOnlineRows();
+  if(online){
+    onlineStatus.textContent="🌐 線上排行榜已連線";onlineStatus.className="onlineStatus ok";
+    leaderboardList.innerHTML=online.length?online.map((r,i)=>`<li><span class="rankNo">${i+1}</span><span>${escapeHtml(r.name)}</span><span class="rankScore">${Number(r.score).toLocaleString("en-US")}</span></li>`).join(""):`<li><span class="rankNo">—</span><span>尚無線上紀錄</span><span class="rankScore">0</span></li>`;
+  }else{
+    onlineStatus.textContent=onlineConfigured()?"⚠️ 線上連線失敗，顯示本機備援":"📱 尚未設定線上資料庫，顯示本機排行榜";
+    onlineStatus.className="onlineStatus bad";renderLeaderboard();
+  }
+}
+
 function isWeaponUnlocked(k){return save.unlocked>=WEAPONS[k].unlock}
 function availableWeaponNames(){return Object.keys(WEAPONS).filter(isWeaponUnlocked).map(k=>WEAPONS[k].name)}
 
@@ -410,12 +817,12 @@ function buildStages(){
   });
   starBadge.textContent="⭐ "+totalStars();
   weaponBadge.textContent="🔨 "+Object.keys(WEAPONS).filter(isWeaponUnlocked).length+" / 4";
-  refreshTotal();
+  refreshTotal();refreshCoins();
 }
 function showMenu(){
   running=false;document.body.classList.remove("playing");
-  clearTimeout(spawnTimer);clearInterval(countTimer);clearInterval(milkDotTimer);stopMusic();
-  resultOverlay.classList.add("hidden");victoryOverlay.classList.add("hidden");leaderboardOverlay.classList.add("hidden");
+  clearTimeout(spawnTimer);clearInterval(countTimer);clearInterval(milkDotTimer);endUmbrellaSlow();stopMusic();
+  resultOverlay.classList.add("hidden");victoryOverlay.classList.add("hidden");leaderboardOverlay.classList.add("hidden");collectionOverlay.classList.add("hidden");shopOverlay.classList.add("hidden");cardZoomOverlay.classList.add("hidden");packOverlay.classList.add("hidden");
   menuOverlay.classList.remove("hidden");buildStages();
 }
 function setupLevel(){
@@ -438,6 +845,7 @@ function startLevel(){
   countTimer=setInterval(()=>{
     timeLeft--;time.textContent=timeLeft;
     if(Date.now()>skillUntil && skillMode==="milk"){skillMode=null;clearInterval(milkDotTimer)}
+    if(Date.now()>umbrellaSlowUntil && skillMode==="umbrella"){endUmbrellaSlow()}
     if(timeLeft<=0)finish();
   },1000);
 }
@@ -453,12 +861,14 @@ function spawnOne(){
   let type=L.pool[Math.floor(Math.random()*L.pool.length)];
   if(L.boss && Math.random()<.22)type="knee";
   const m=MOLES[type],token=performance.now()+Math.random();
-  active[i]={type,hp:m.hp,max:m.hp,token};
+  active[i]={type,hp:m.hp,max:m.hp,token,timeout:null};
   const el=moleEls[i];el.querySelector(".host").innerHTML=m.svg;el.querySelector(".mouseName").textContent=m.name;el.querySelector(".hp i").style.width="100%";
   el.classList.remove("stunned");el.classList.add("show");
   if(skillMode==="milk")el.classList.add("stunned");
+  if(Date.now()<umbrellaSlowUntil)el.classList.add("slowed");
   let stay=Math.max(330,m.stay-level*28)+(skillMode==="milk"?520:0);
-  setTimeout(()=>{if(active[i]&&active[i].token===token){hide(i);combo=0;updateHUD()}},stay);
+  if(Date.now()<umbrellaSlowUntil)stay*=2;
+  active[i].timeout=setTimeout(()=>{if(active[i]&&active[i].token===token){hide(i);combo=0;updateHUD()}},stay);
 }
 function neighbors(i){const r=Math.floor(i/3),c=i%3,a=[];if(r>0)a.push(i-3);if(r<2)a.push(i+3);if(c>0)a.push(i-1);if(c<2)a.push(i+1);return a}
 function row(i){const r=Math.floor(i/3);return[r*3,r*3+1,r*3+2]}
@@ -468,21 +878,49 @@ function attack(i,e){
   if(weapon==="basic")damage(i,1,e.clientX,e.clientY,1);
   if(weapon==="milk"){damage(i,1,e.clientX,e.clientY,1);neighbors(i).forEach(n=>active[n]&&damage(n,1,e.clientX,e.clientY,.55,true))}
   if(weapon==="squid"){damage(i,1,e.clientX,e.clientY,1);const o=active.map((x,j)=>x&&j!==i?j:null).filter(x=>x!==null);if(o.length){const n=o[Math.floor(Math.random()*o.length)];setTimeout(()=>damage(n,1,e.clientX+25,e.clientY-10,.7,true),80)}}
-  if(weapon==="umbrella")row(i).forEach(n=>active[n]&&damage(n,1,e.clientX,e.clientY,n===i?1:.7,true));
+  if(weapon==="umbrella"){
+    spreadFx(e.clientX,e.clientY);
+    damage(i,1,e.clientX,e.clientY,1);
+    neighbors(i).forEach(n=>active[n]&&damage(n,1,e.clientX,e.clientY,.72,true));
+    const r=Math.floor(i/3),c=i%3;
+    [[r-1,c-1],[r-1,c+1],[r+1,c-1],[r+1,c+1]].forEach(([rr,cc])=>{
+      if(rr>=0&&rr<3&&cc>=0&&cc<3){const n=rr*3+cc;if(active[n])damage(n,1,e.clientX,e.clientY,.45,true)}
+    });
+  }
 }
-function damage(i,d,x,y,mult=1,secondary=false){
+function damage(i,d,x,y,mult=1,secondary=false,opts={}){
   if(!active[i])return;
-  const st=active[i],m=MOLES[st.type],el=moleEls[i];st.hp-=d;
-  el.classList.remove("hit");void el.offsetWidth;el.classList.add("hit");el.querySelector(".hp i").style.width=Math.max(0,st.hp/st.max*100)+"%";
+  const st=active[i],m=MOLES[st.type],el=moleEls[i];
+  const skillHit=!!opts.skill;
+  let crit=false;
+  if(opts.forceCrit)crit=true;
+  else if(hasCard("salon") && (skillHit || Date.now()<skillUntil || Date.now()<umbrellaSlowUntil))crit=true;
+  else if(hasCard("wan") && Math.random()<.10)crit=true;
+
+  if(crit && st.type!=="gold")st.hp=0;
+  else st.hp-=d;
+
+  el.classList.remove("hit");void el.offsetWidth;el.classList.add("hit");
+  el.querySelector(".hp i").style.width=Math.max(0,st.hp/st.max*100)+"%";
   bonk(weapon,secondary);
+
   if(st.hp<=0){
-    let gain=Math.round(m.score*mult);if(skillMode==="milk")gain*=2;combo++;gain+=Math.min(combo,25)*7;score+=gain;
+    let gain=Math.round(m.score*mult);
+    if(skillMode==="milk")gain*=2;
+    if(crit)gain*=2;
+    if(hasCard("knee") && (skillHit || Date.now()<skillUntil || Date.now()<umbrellaSlowUntil))gain*=2;
+
+    combo++;gain+=Math.min(combo,25)*7;score+=gain;
     let rate={basic:18,milk:13,squid:12,umbrella:10}[weapon];if(Date.now()<rapidUntil)rate*=1.7;
     charge=Math.min(100,charge+rate);
+
+    if(crit)floatText("CRITICAL!",x,y-28);
+
     if(st.type==="gold"){
-      goldBurst(i);
-      goldJingle();
-      floatText("JACKPOT!",x,y-24);
+      let coins=1*coinMultiplier();
+      save.coins+=coins;writeSave();refreshCoins();
+      goldBurst(i);goldJingle();
+      floatText("JACKPOT!  🪙+"+coins,x,y-24);
       floatText("+"+gain,x,y+4);
     }else{
       floatText("+"+gain,x,y);
@@ -491,7 +929,10 @@ function damage(i,d,x,y,mult=1,secondary=false){
   }
   updateHUD();
 }
-function hide(i){active[i]=null;moleEls[i].classList.remove("show","stunned")}
+function hide(i){
+  if(active[i]?.timeout)clearTimeout(active[i].timeout);
+  active[i]=null;moleEls[i].classList.remove("show","stunned","slowed")
+}
 function refreshWeapons(){
   document.querySelectorAll(".weapon").forEach(b=>{const k=b.dataset.w,locked=!isWeaponUnlocked(k);b.classList.toggle("locked",locked);b.classList.toggle("active",k===weapon&&!locked);const l=b.querySelector(".lock");if(l)l.style.display=locked?"inline-block":"none"})
 }
@@ -501,33 +942,32 @@ const scoreEl=document.getElementById("score"),comboEl=document.getElementById("
 
 function useSkill(){
   if(charge<100||!running)return;charge=0;skillJingle();
+  const forceCrit=hasCard("salon");
+
   if(weapon==="basic"){
     skillBanner.textContent="🔨 安安暴走！";showBanner();flashFx();shake();rapidUntil=Date.now()+3000;
-    active.forEach((x,i)=>x&&damage(i,99,innerWidth/2,innerHeight*.45,1,true));
+    active.forEach((x,i)=>x&&damage(i,99,innerWidth/2,innerHeight*.45,1,true,{skill:true,forceCrit}));
   }
   if(weapon==="milk"){
     skillBanner.textContent="🥛 生生喝鮮乳！";showBanner();shake();milkWave();
-    /* Immediate real damage */
-    active.forEach((x,i)=>x&&damage(i,2,innerWidth/2,innerHeight*.45,1.2,true));
+    active.forEach((x,i)=>x&&damage(i,2,innerWidth/2,innerHeight*.45,1.2,true,{skill:true,forceCrit}));
     skillMode="milk";skillUntil=Date.now()+6500;
     for(let k=0;k<22;k++)setTimeout(milkDrop,k*80);
-    /* Periodic real damage during the skill */
     clearInterval(milkDotTimer);
     milkDotTimer=setInterval(()=>{
       if(Date.now()>skillUntil){clearInterval(milkDotTimer);return}
-      active.forEach((x,i)=>{if(x){moleEls[i].classList.add("stunned");damage(i,1,innerWidth/2,innerHeight*.44,.65,true)}})
+      active.forEach((x,i)=>{if(x){moleEls[i].classList.add("stunned");damage(i,1,innerWidth/2,innerHeight*.44,.65,true,{skill:true,forceCrit})}})
     },1200);
     floatText("奶浪傷害＋雙倍分數！",innerWidth/2,innerHeight*.30);
   }
   if(weapon==="squid"){
     skillBanner.textContent="🦑 營養午餐大爆發！";showBanner();shake();
     for(let k=0;k<9;k++)setTimeout(()=>inkBurst(Math.random()*85+4,Math.random()*65+12),k*80);
-    setTimeout(()=>active.forEach((x,i)=>x&&damage(i,99,innerWidth/2,innerHeight*.45,2,true)),260);
+    setTimeout(()=>active.forEach((x,i)=>x&&damage(i,99,innerWidth/2,innerHeight*.45,2,true,{skill:true,forceCrit})),260);
   }
   if(weapon==="umbrella"){
-    skillBanner.textContent="☂️ 百萬遮陽傘！";showBanner();shake();
-    const s=document.createElement("div");s.className="sweep";fx.appendChild(s);setTimeout(()=>s.remove(),950);
-    [0,1,2].forEach((r,k)=>setTimeout(()=>[r*3,r*3+1,r*3+2].forEach(i=>active[i]&&damage(i,99,innerWidth/2,innerHeight*.45,1.5,true)),k*180));
+    skillBanner.textContent="☂️ 百萬遮陽傘・0.5倍速！";showBanner();shake();
+    startUmbrellaSlow(forceCrit);
   }
   updateHUD();
 }
@@ -537,6 +977,39 @@ function flashFx(){const f=document.createElement("div");f.className="flash";fx.
 function milkWave(){const w=document.createElement("div");w.className="milkWave";fx.appendChild(w);setTimeout(()=>w.remove(),1100)}
 function milkDrop(){const d=document.createElement("div");d.className="milkDrop";d.textContent=Math.random()>.45?"🥛":"💧";d.style.left=Math.random()*94+"%";d.style.top="-25px";fx.appendChild(d);setTimeout(()=>d.remove(),850)}
 function inkBurst(x,y){const d=document.createElement("div");d.className="ink";d.style.left=x+"%";d.style.top=y+"%";fx.appendChild(d);setTimeout(()=>d.remove(),1100)}
+
+function spreadFx(x,y){
+  const r=arena.getBoundingClientRect(),d=document.createElement("div");d.className="spreadRing";
+  d.style.left=(x-r.left)+"px";d.style.top=(y-r.top)+"px";fx.appendChild(d);setTimeout(()=>d.remove(),520);
+}
+function startUmbrellaSlow(forceCrit){
+  endUmbrellaSlow();
+  skillMode="umbrella";umbrellaSlowUntil=Date.now()+10000;skillUntil=umbrellaSlowUntil;
+  const field=document.createElement("div");field.className="slowField";field.id="slowField";fx.appendChild(field);
+  active.forEach((st,i)=>{
+    if(!st)return;
+    moleEls[i].classList.add("slowed");
+    if(st.timeout)clearTimeout(st.timeout);
+    st.timeout=setTimeout(()=>{if(active[i]===st){hide(i);combo=0;updateHUD()}},2200);
+  });
+  const pulse=(delay)=>{
+    const id=setTimeout(()=>{
+      if(Date.now()>=umbrellaSlowUntil)return;
+      const s=document.createElement("div");s.className="sweep";fx.appendChild(s);setTimeout(()=>s.remove(),950);
+      active.forEach((x,i)=>x&&damage(i,1,innerWidth/2,innerHeight*.45,.85,true,{skill:true,forceCrit}));
+    },delay);umbrellaPulseTimers.push(id);
+  };
+  pulse(0);pulse(3000);pulse(6000);
+  floatText("全場 0.5倍速・10秒！",innerWidth/2,innerHeight*.30);
+}
+function endUmbrellaSlow(){
+  umbrellaPulseTimers.forEach(clearTimeout);umbrellaPulseTimers=[];
+  umbrellaSlowUntil=0;
+  document.getElementById("slowField")?.remove();
+  moleEls.forEach(el=>el.classList.remove("slowed"));
+  if(skillMode==="umbrella")skillMode=null;
+}
+
 function floatText(t,x,y){const f=document.createElement("div");f.className="float";f.textContent=t;f.style.left=x+"px";f.style.top=y+"px";document.body.appendChild(f);setTimeout(()=>f.remove(),780)}
 function goldBurst(i){
   const host=moleEls[i].parentElement;
@@ -555,7 +1028,7 @@ function starsFor(score,target){if(score>=target*1.55)return 3;if(score>=target*
 function finish(){
   if(!running)return;
   running=false;document.body.classList.remove("playing");
-  clearTimeout(spawnTimer);clearInterval(countTimer);clearInterval(milkDotTimer);stopMusic();active.forEach((x,i)=>hide(i));
+  clearTimeout(spawnTimer);clearInterval(countTimer);clearInterval(milkDotTimer);endUmbrellaSlow();stopMusic();active.forEach((x,i)=>hide(i));
   const L=LEVELS[level],ok=score>=L.target;
   if(ok){
     const stars=starsFor(score,L.target);
@@ -626,24 +1099,33 @@ function resultTune(ok){(ok?[72,76,79,84,88]:[69,67,64,60]).forEach((n,i)=>tone(
 function uiChime(){tone(76,.07,.02,"sine");tone(83,.08,.016,"sine",.045)}
 
 playSelected.onclick=startLevel;
-leaderboardBtn.onclick=()=>{renderLeaderboard();menuOverlay.classList.add("hidden");leaderboardOverlay.classList.remove("hidden")};
+leaderboardBtn.onclick=async()=>{menuOverlay.classList.add("hidden");leaderboardOverlay.classList.remove("hidden");await renderBestLeaderboard()};
 closeLeaderboard.onclick=()=>{leaderboardOverlay.classList.add("hidden");menuOverlay.classList.remove("hidden");buildStages()};
+collectionBtn.onclick=()=>{buildCollection();menuOverlay.classList.add("hidden");collectionOverlay.classList.remove("hidden")};
+closeZoomCard.onclick=()=>cardZoomOverlay.classList.add("hidden");
+zoomFlipBtn.onclick=toggleZoomCard;
+packOpenBtn.onclick=revealBoughtCard;
+packFlipBtn.onclick=togglePackCard;
+packCloseBtn.onclick=closePackSequence;
+packFoil.onclick=revealBoughtCard;
+closeCollection.onclick=()=>{collectionOverlay.classList.add("hidden");menuOverlay.classList.remove("hidden");buildStages()};
+shopBtn.onclick=()=>{buildShop();menuOverlay.classList.add("hidden");shopOverlay.classList.remove("hidden")};
+closeShop.onclick=()=>{shopOverlay.classList.add("hidden");menuOverlay.classList.remove("hidden");buildStages()};
 victoryMenuBtn.onclick=showMenu;
-submitRanking.onclick=()=>{
+submitRanking.onclick=async()=>{
   const input=document.getElementById("playerName");
   const err=document.getElementById("playerNameError");
   const name=(input?.value||"").trim();
-  if(!name){
-    err.textContent="請先輸入名字再登記排行榜";
-    input?.focus();
-    return;
-  }
+  if(!name){err.textContent="請先輸入名字再登記排行榜";input?.focus();return}
   err.textContent="";
-  if(!addLeaderboard(name,cumulativeTotal()))return;
-  renderLeaderboard();
+  const finalScore=cumulativeTotal();
+  if(!addLeaderboard(name,finalScore))return;
+  const onlineOK=await submitOnlineScore(name,finalScore);
   victoryOverlay.classList.add("hidden");
   leaderboardOverlay.classList.remove("hidden");
   input.value="";
+  await renderBestLeaderboard();
+  if(onlineConfigured()&&!onlineOK){onlineStatus.textContent="⚠️ 線上寫入失敗，已保存本機紀錄";onlineStatus.className="onlineStatus bad"}
 };
 menuBtn.onclick=showMenu;
 retryBtn.onclick=()=>{selectedLevel=level;startLevel()};
@@ -660,7 +1142,9 @@ document.getElementById("playerName").addEventListener("keydown",e=>{
 });
 soundBtn.onclick=e=>{soundOn=!soundOn;e.currentTarget.textContent=soundOn?"🔊":"🔇";if(soundOn&&running)startMusic();else stopMusic()};
 document.querySelectorAll(".weapon").forEach(b=>b.onclick=()=>chooseWeapon(b.dataset.w));
-buildStages();refreshWeapons();updateHUD();refreshTotal();
+buildStages();refreshWeapons();updateHUD();refreshTotal();refreshCoins();
+attachZoomSwipe();
+attachRewardSwipe();
 
 if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
